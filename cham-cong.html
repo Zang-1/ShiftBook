@@ -453,7 +453,7 @@ label.btn{cursor:pointer}
       </div>
       <div class="export">
         <select id="exScope" aria-label="Phạm vi xuất file">
-          <option value="period">Kỳ lương đang xem</option>
+          <option value="period">Tháng lương đang xem (tab Lương)</option>
           <option value="month">Tháng đang xem</option>
           <option value="all">Toàn bộ dữ liệu</option>
         </select>
@@ -529,19 +529,16 @@ label.btn{cursor:pointer}
 
       <div class="card set-card">
         <h2>Kỳ lương</h2>
-        <p>Kỳ đầu tính công từ ngày bắt đầu làm tới hết ngày trước lần nhận lương đầu. Các kỳ sau tính từ ngày nhận lương tới hết ngày trước kỳ lương tháng sau.</p>
+        <p>Lương mỗi tháng tính công từ ngày 1 tới hết tháng, nhận vào ngày dưới đây của tháng sau. Ví dụ công tháng 9 nhận ngày 10/10.</p>
         <div class="form">
           <div class="two">
             <label class="field"><span>Ngày bắt đầu làm</span>
               <input type="date" id="setStart">
             </label>
-            <label class="field"><span>Nhận lương ngày</span>
+            <label class="field"><span>Nhận lương ngày (tháng sau)</span>
               <input type="number" id="setPayDay" min="1" max="28" step="1" inputmode="numeric">
             </label>
           </div>
-          <label class="field"><span>Nhận lương lần đầu</span>
-            <input type="date" id="setFirstPay">
-          </label>
         </div>
       </div>
 
@@ -797,29 +794,30 @@ label.btn{cursor:pointer}
     return r;
   }
   // ---------- kỳ lương ----------
-  // Kỳ nhận lương tháng (y, m): từ ngày lương tháng trước tới hết ngày trước ngày lương tháng này.
-  // Kỳ đầu tiên (tháng của "nhận lương lần đầu") bắt đầu từ ngày bắt đầu làm.
+  // Kỳ lương = tháng làm (y, m): công từ ngày 1 tới hết tháng (không tính trước ngày bắt đầu làm),
+  // nhận lương vào ngày payDay của tháng sau.
   const fmtDMY = k => { const d = dateOf(k); return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`; };
   function payDateOf(y, m) {
     const d = new Date(y, m, 1), dim = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
     return new Date(d.getFullYear(), d.getMonth(), Math.min(S.settings.payDay, dim));
   }
   function periodOf(y, m) {
-    const st = S.settings, payK = keyOf(payDateOf(y, m));
-    const ym = payK.slice(0, 7), fpM = st.firstPay ? st.firstPay.slice(0, 7) : "";
-    let startK = keyOf(payDateOf(y, m - 1));
-    if (fpM && ym === fpM && st.startDate) startK = st.startDate;
-    else if (st.startDate && startK < st.startDate) startK = st.startDate;
-    const endK = keyOf(addDays(payDateOf(y, m), -1));
-    const beforeStart = fpM ? ym < fpM : (st.startDate ? endK < st.startDate : false);
-    return { payK, startK, endK, beforeStart };
+    const st = S.settings, first = new Date(y, m, 1);
+    const endK = keyOf(new Date(first.getFullYear(), first.getMonth() + 1, 0));
+    let startK = keyOf(first);
+    if (st.startDate && startK < st.startDate) startK = st.startDate;
+    const payK = keyOf(payDateOf(first.getFullYear(), first.getMonth() + 1));
+    return { payK, startK, endK, month: first.getMonth() + 1, year: first.getFullYear(), beforeStart: !!st.startDate && endK < st.startDate };
   }
+  // Kỳ "hiện tại" = kỳ lương sắp nhận: trước hoặc đúng ngày lương thì là tháng trước, sau đó là tháng này
   function currentPayMonth() {
-    const n = new Date(), d = new Date(n.getFullYear(), n.getMonth() + (keyOf(n) >= keyOf(payDateOf(n.getFullYear(), n.getMonth())) ? 1 : 0), 1);
-    let y = d.getFullYear(), m = d.getMonth();
-    const fp = S.settings.firstPay;
-    if (fp) { const [fy, fm] = fp.split("-").map(Number); if (y * 12 + m < fy * 12 + fm - 1) { y = fy; m = fm - 1; } }
-    return { y, m };
+    const n = new Date();
+    let d = new Date(n.getFullYear(), n.getMonth(), 1);
+    if (keyOf(n) <= keyOf(payDateOf(n.getFullYear(), n.getMonth()))) {
+      const prev = new Date(n.getFullYear(), n.getMonth() - 1, 1);
+      if (!periodOf(prev.getFullYear(), prev.getMonth()).beforeStart) d = prev;
+    }
+    return { y: d.getFullYear(), m: d.getMonth() };
   }
   function rangeKeys(a, b) {
     const out = [];
@@ -953,7 +951,7 @@ label.btn{cursor:pointer}
   function renderMiniPay() {
     const cm = currentPayMonth(), p = periodOf(cm.y, cm.m), tk = todayKey();
     const sum = summarize(rangeKeys(p.startK, p.endK));
-    $("#miniPayLabel").textContent = `Lương kỳ này · nhận ${fmtDM(p.payK)}`;
+    $("#miniPayLabel").textContent = `Lương tháng ${p.month} · nhận ${fmtDM(p.payK)}`;
     $("#miniPayAmt").textContent = S.settings.rate ? fmtMoney(sum.pay) : "Chưa nhập lương";
     const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
     const when = left <= 0 ? "Đã tới ngày lương" : left === 1 ? "Ngày mai nhận lương" : `Còn ${left} ngày tới ngày lương`;
@@ -964,8 +962,8 @@ label.btn{cursor:pointer}
     if (!S.payView || periodOf(S.payView.y, S.payView.m).beforeStart) S.payView = currentPayMonth();
     const { y, m } = S.payView, p = periodOf(y, m), tk = todayKey(), st = S.settings;
     const keys = rangeKeys(p.startK, p.endK), sum = summarize(keys);
-    $("#payTitle").textContent = `Nhận lương ${fmtDMY(p.payK)}`;
-    $("#payRange").textContent = `Tính công ${fmtDMY(p.startK)} – ${fmtDMY(p.endK)} · ${keys.length} ngày`;
+    $("#payTitle").textContent = `Lương tháng ${p.month}/${p.year}`;
+    $("#payRange").textContent = `Nhận ngày ${fmtDMY(p.payK)} · tính công ${fmtDM(p.startK)} – ${fmtDM(p.endK)}`;
     if (st.rate) {
       const bits = Object.entries(sum.parts).sort((a, b) => a[0] - b[0]).map(([r, mins]) =>
         `${fmtDur(mins)} × ${fmtMoney(+r)}${st.probDays && +r === st.probRate && st.probRate !== st.rate ? " (thử việc)" : ""}`);
@@ -985,19 +983,18 @@ label.btn{cursor:pointer}
       <div><dt>Ngày đi làm</dt><dd>${sum.workDays}</dd></div>
       <div><dt>Ngày nghỉ</dt><dd>${sum.offDays}</dd></div>
       <div><dt>Làm thêm</dt><dd>${fmtDur(sum.ot)}</dd></div>`;
-    let cls = "t-idle", txt = "Kỳ sắp tới", live = false;
+    let cls = "t-idle", txt = "Tháng sắp tới", live = false;
+    const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
+    const leftTxt = left === 1 ? "ngày mai nhận lương" : `còn ${left} ngày tới ngày lương`;
     if (tk >= p.payK) { cls = "t-work"; txt = "Đã tới ngày nhận lương"; }
-    else if (tk >= p.startK) {
-      const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
-      cls = "t-accent"; live = true;
-      txt = left === 1 ? "Đang tính công · ngày mai nhận lương" : `Đang tính công · còn ${left} ngày tới ngày lương`;
-    }
+    else if (tk > p.endK) { cls = "t-accent"; txt = `Đã chốt công · ${leftTxt}`; }
+    else if (tk >= p.startK) { cls = "t-accent"; live = true; txt = `Đang tính công · ${leftTxt}`; }
     $("#payStatus").className = `pill ${cls}${live ? " live" : ""}`;
     $("#payStatusText").textContent = txt;
     $("#prevP").disabled = periodOf(y, m - 1).beforeStart;
   }
 
-  const SETTING_IDS = ["#setRate", "#setOtRate", "#setProbDays", "#setProbRate", "#setStart", "#setPayDay", "#setFirstPay"];
+  const SETTING_IDS = ["#setRate", "#setOtRate", "#setProbDays", "#setProbRate", "#setStart", "#setPayDay"];
   function renderSettingsInputs() {
     const st = S.settings, a = document.activeElement;
     const set = (id, v) => { const el = $(id); if (el !== a) el.value = v; };
@@ -1007,7 +1004,6 @@ label.btn{cursor:pointer}
     set("#setProbRate", st.probRate || "");
     set("#setStart", st.startDate);
     set("#setPayDay", st.payDay);
-    set("#setFirstPay", st.firstPay);
     SETTING_IDS.forEach(id => $(id).disabled = !canWrite());
     renderShiftList(false);
   }
@@ -1230,7 +1226,7 @@ label.btn{cursor:pointer}
     if ($("#exScope").value === "all") return { keys: [...S.days.keys()].sort(), name: "cham-cong-toan-bo", sheet: "Toàn bộ" };
     if ($("#exScope").value === "period") {
       const p = periodOf(S.payView.y, S.payView.m);
-      return { keys: rangeKeys(p.startK, p.endK), name: `cham-cong-ky-luong-${p.payK}`, sheet: `Kỳ lương ${p.payK.split("-").reverse().join("-")}` };
+      return { keys: rangeKeys(p.startK, p.endK), name: `luong-thang-${p.year}-${pad(p.month)}`, sheet: `Lương tháng ${p.month}-${p.year}` };
     }
     const { y, m } = S.view;
     return { keys: monthKeys(y, m), name: `cham-cong-${y}-${pad(m + 1)}`, sheet: `Tháng ${m + 1}-${y}` };
@@ -1463,7 +1459,7 @@ label.btn{cursor:pointer}
       shifts,
       payDay: Number($("#setPayDay").value) || 10,
       startDate: $("#setStart").value,
-      firstPay: $("#setFirstPay").value,
+      firstPay: S.settings.firstPay,
     });
     if (JSON.stringify(v) === JSON.stringify(S.settings)) return;
     S.settings = v; renderAll();
