@@ -67,6 +67,12 @@ h3{margin:0;font-size:15px;font-weight:600}
 .sync[data-state="saving"]::before{background:var(--accent)}
 .sync[data-state="off"]::before,.sync[data-state="error"]::before{background:var(--danger)}
 .sync[data-state="readonly"]::before{background:var(--warn)}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.account{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.signin{margin-bottom:18px;padding:20px}
+.signin p{color:var(--muted);max-width:60ch;margin:8px 0 14px}
+.signin .ed-error{margin-top:12px}
+label.btn{cursor:pointer}
 .banner{background:var(--warn-soft);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
 
 .grid{display:grid;gap:18px;grid-template-columns:1fr;grid-template-areas:"today" "week" "month" "settings"}
@@ -257,9 +263,18 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       <div class="eyebrow" id="todayLabel">&nbsp;</div>
       <h1>ShiftBook</h1>
     </div>
-    <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
+    <div class="top-right">
+      <span class="account" id="account" hidden><span id="accountEmail"></span><button type="button" class="linkish" id="signOutBtn">Đăng xuất</button></span>
+      <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
+    </div>
   </header>
   <div class="banner" id="banner" hidden></div>
+  <section class="card signin" id="signin" hidden aria-labelledby="signinH">
+    <h2 id="signinH">Đăng nhập để dùng ShiftBook</h2>
+    <p>Sổ chấm công lưu theo tài khoản Google của bạn, nên mở trên điện thoại hay laptop đều thấy cùng dữ liệu. Chỉ bạn xem được sổ của mình.</p>
+    <button class="btn primary" id="signInBtn" type="button">Đăng nhập bằng Google</button>
+    <p class="ed-error" id="signinErr" hidden></p>
+  </section>
 
   <main class="grid">
     <article class="punch a-today" aria-labelledby="punchTag">
@@ -396,6 +411,19 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
           <input type="date" id="setFirstPay">
           <small>Kỳ đầu tính công từ ngày bắt đầu làm tới hết ngày trước lần nhận lương đầu. Các kỳ sau tính từ ngày nhận lương tới hết ngày trước kỳ lương tháng sau.</small>
         </label>
+        <div class="field"><span>Sao lưu dữ liệu</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="backupBtn" type="button">Tải file sao lưu</button>
+            <label class="btn" for="importFile">Nhập từ file sao lưu</label>
+            <input type="file" id="importFile" accept=".json,application/json" hidden>
+          </div>
+          <small>File sao lưu (.json) chứa toàn bộ ngày làm và cài đặt. Dùng để giữ một bản dự phòng, hoặc chuyển dữ liệu giữa bản claude.ai và bản GitHub.</small>
+          <div class="confirm" id="importConfirm" hidden>
+            <p id="importMsg"></p>
+            <button class="btn" id="importNo" type="button">Huỷ</button>
+            <button class="btn primary" id="importYes" type="button">Nhập</button>
+          </div>
+        </div>
       </div>
     </details>
   </main>
@@ -469,6 +497,12 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
 <script>
 (() => {
   const $ = s => document.querySelector(s);
+  // Trên claude.ai dùng kho dữ liệu của claude.ai; mở ở nơi khác (GitHub Pages) thì dùng Firebase.
+  const ON_CLAUDE = !!window.claude;
+  // Cấu hình web app trong Firebase Console → Project settings → Your apps. Các giá trị này công khai được;
+  // dữ liệu được bảo vệ bằng Firestore rules (mỗi người chỉ đọc/ghi users/<uid của mình>).
+  const FIREBASE_CONFIG = { apiKey: "", authDomain: "", projectId: "", appId: "" };
+  const FIREBASE_VERSION = "10.12.2";
   const OFF = { phep: "Nghỉ phép", om: "Nghỉ ốm", le: "Nghỉ lễ", lich: "Ngày nghỉ", khac: "Nghỉ khác" };
   const OFF_SHORT = { phep: "Phép", om: "Ốm", le: "Lễ", lich: "Off", khac: "Nghỉ" };
   const PAID_OFF = new Set(["phep", "le"]);
@@ -662,7 +696,8 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     let st = S.status, txt;
     if (S.pending > 0) st = "saving";
     else if (S.readonly) st = "readonly";
-    txt = { connecting: "Đang kết nối…", live: "Đã đồng bộ", saving: "Đang lưu…", off: "Chưa đồng bộ", error: "Mất kết nối", readonly: "Chỉ xem" }[st];
+    txt = { connecting: "Đang kết nối…", live: "Đã đồng bộ", saving: "Đang lưu…", off: "Chưa đồng bộ", error: "Mất kết nối", readonly: "Chỉ xem", signedout: "Chưa đăng nhập" }[st];
+    if (st === "signedout") st = "off";
     el.dataset.state = st; el.textContent = txt;
   }
 
@@ -678,8 +713,10 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     const pill = $("#statePill"), stateText = $("#stateText"), label = $("#todayLabel2");
     let cls = "t-idle", txt, sub, live = false;
     if (!S.loaded) {
-      txt = S.status === "off" ? "Chưa kết nối" : "Đang tải dữ liệu";
-      sub = S.status === "off" ? "Mở trang trên claude.ai khi đã đăng nhập để chấm công." : "Dữ liệu của bạn sẽ hiện ở đây sau khi kết nối.";
+      txt = { off: "Chưa kết nối", error: "Chưa kết nối", signedout: "Chưa đăng nhập" }[S.status] || "Đang tải dữ liệu";
+      sub = S.status === "signedout" ? "Đăng nhập bằng Google ở phía trên để xem sổ chấm công."
+        : S.status === "off" || S.status === "error" ? "Chưa kết nối được nơi lưu dữ liệu."
+        : "Dữ liệu của bạn sẽ hiện ở đây sau khi kết nối.";
     } else if (openK === tk) {
       const last = day.sessions[day.sessions.length - 1];
       cls = "t-work"; live = true; txt = "Đang làm"; sub = `Vào lúc ${last.in} · đang tính giờ`;
@@ -870,7 +907,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   }
   function onWriteError(e) {
     const c = e && e.code;
-    if (c === "invalid_argument") { S.readonly = true; showBanner("Bạn chỉ có quyền xem sổ chấm công này nên không lưu được thay đổi."); }
+    if (c === "invalid_argument" || c === "permission-denied") { S.readonly = true; showBanner("Bạn chỉ có quyền xem sổ chấm công này nên không lưu được thay đổi."); }
     else if (c === "quota_exceeded") toast("Kho dữ liệu đã đầy. Xoá bớt dữ liệu cũ rồi thử lại.");
     else if (c === "revoked") { S.status = "error"; showBanner("Quyền truy cập dữ liệu đã thay đổi. Tải lại trang để tiếp tục."); }
     else toast("Chưa lưu được. Kiểm tra mạng rồi thử lại.");
@@ -1057,9 +1094,6 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   async function doExport(kind) {
     const sc = exportScope();
     if (!sc.keys.some(k => S.days.has(k))) { toast("Không có dữ liệu để xuất trong phạm vi này."); return; }
-    let dl = null;
-    try { dl = await window.claude?.use?.("downloads"); } catch (_) {}
-    if (!dl) { toast("Trang đang mở ở chế độ không cho tải file."); return; }
     const rows = exportRows(sc.keys);
     let data, filename;
     if (kind === "csv") {
@@ -1076,13 +1110,78 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       data = new Blob([X.write(wb, { bookType: "xlsx", type: "array" })]);
       filename = sc.name + ".xlsx";
     }
-    try { await dl.save({ filename, data }); }
-    catch (e) {
-      const c = e && e.code;
-      if (c === "declined") return;
-      toast(c === "rate_limited" ? "Đang có một hộp thoại tải file mở. Thử lại sau." : "Không tải được file.");
-    }
+    await saveFile(filename, data);
   }
+  // Trên claude.ai tải file qua capability downloads; trên GitHub Pages dùng link tải thường.
+  async function saveFile(filename, data) {
+    if (ON_CLAUDE) {
+      let dl = null;
+      try { dl = await window.claude.use("downloads"); } catch (_) {}
+      if (!dl) { toast("Trang đang mở ở chế độ không cho tải file."); return; }
+      try { await dl.save({ filename, data }); }
+      catch (e) {
+        const c = e && e.code;
+        if (c === "declined") return;
+        toast(c === "rate_limited" ? "Đang có một hộp thoại tải file mở. Thử lại sau." : "Không tải được file.");
+      }
+      return;
+    }
+    const blob = data instanceof Blob ? data : new Blob([data], { type: "application/octet-stream" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+
+  // ---------- sao lưu / nhập ----------
+  const DAY_FIELDS = ["date", "status", "offType", "sessions", "note", "extraMin", "rateOverride", "bonus", "payOverride", "updatedAt"];
+  function cleanDay(k, v) {
+    if (!v || (v.status !== "work" && v.status !== "off")) return null;
+    const out = {};
+    for (const f of DAY_FIELDS) if (v[f] !== undefined && v[f] !== null) out[f] = v[f];
+    out.date = k;
+    out.sessions = Array.isArray(v.sessions) ? v.sessions.filter(s => s && TIME_RE.test(s.in) && (!s.out || TIME_RE.test(s.out))).map(s => (s.out ? { in: s.in, out: s.out } : { in: s.in })) : [];
+    return JSON.parse(JSON.stringify(out));
+  }
+  $("#backupBtn").addEventListener("click", () => {
+    if (!S.loaded) { toast("Dữ liệu chưa tải xong."); return; }
+    const days = {};
+    for (const k of [...S.days.keys()].sort()) days[k] = S.days.get(k);
+    const data = { app: "ShiftBook", version: 1, exportedAt: new Date().toISOString(), settings: S.settings, days };
+    saveFile(`shiftbook-sao-luu-${todayKey()}.json`, JSON.stringify(data, null, 2));
+  });
+  let pendingImport = null;
+  $("#importFile").addEventListener("change", async e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!canWrite()) { toast("Đăng nhập và kết nối dữ liệu trước khi nhập."); return; }
+    let obj = null;
+    try { obj = JSON.parse(await file.text()); } catch (_) {}
+    const days = obj && obj.days && typeof obj.days === "object"
+      ? Object.entries(obj.days).filter(([k]) => DATE_RE.test(k)).map(([k, v]) => [k, cleanDay(k, v)]).filter(([, v]) => v)
+      : [];
+    const settings = obj && obj.settings && typeof obj.settings === "object" ? normSettings(obj.settings) : null;
+    if (!days.length && !settings) { toast("File này không phải file sao lưu ShiftBook."); return; }
+    pendingImport = { days, settings };
+    $("#importMsg").textContent = `Nhập ${days.length} ngày${settings ? " và cài đặt" : ""}? Ngày trùng với dữ liệu hiện có sẽ bị ghi đè.`;
+    $("#importConfirm").hidden = false;
+  });
+  $("#importNo").addEventListener("click", () => { pendingImport = null; $("#importConfirm").hidden = true; });
+  $("#importYes").addEventListener("click", async () => {
+    const imp = pendingImport; pendingImport = null; $("#importConfirm").hidden = true;
+    if (!imp || !canWrite()) return;
+    let ok = 0;
+    if (imp.settings) { S.settings = imp.settings; if (await write("settings/main", () => S.db.doc("settings/main").set(imp.settings))) ok++; }
+    for (const [k, v] of imp.days) {
+      S.days.set(k, v);
+      if (await write("days/" + k, () => S.db.collection("days").doc(k).set(v))) ok++;
+    }
+    renderAll();
+    const total = imp.days.length + (imp.settings ? 1 : 0);
+    toast(ok === total ? `Đã nhập ${imp.days.length} ngày${imp.settings ? " và cài đặt" : ""}`
+      : `Mới nhập được ${ok}/${total} mục. Kiểm tra mạng rồi nhập lại file.`);
+  });
 
   // ---------- events ----------
   $("#shiftPick").addEventListener("click", e => {
@@ -1198,23 +1297,98 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   }
   function onSubError(e) {
     S.status = "error";
-    showBanner(e && e.code === "revoked" ? "Quyền truy cập dữ liệu đã thay đổi. Tải lại trang để tiếp tục." : "Mất kết nối tới dữ liệu. Tải lại trang để đồng bộ tiếp.");
+    const c = e && e.code;
+    showBanner(c === "revoked" ? "Quyền truy cập dữ liệu đã thay đổi. Tải lại trang để tiếp tục."
+      : c === "permission-denied" ? "Không đọc được dữ liệu. Kiểm tra quy tắc bảo mật (Rules) của Firestore."
+      : "Mất kết nối tới dữ liệu. Tải lại trang để đồng bộ tiếp.");
     renderAll();
   }
 
-  renderAll();
-  (async () => {
+  // Cả hai nơi lưu (kho dữ liệu claude.ai, Firestore) đều có dạng collection("days") / doc("settings/main").
+  let unsubs = [];
+  function connect(db) {
+    unsubs.forEach(u => u()); unsubs = [];
+    Object.assign(S, { db, status: "connecting", loaded: false, readonly: false });
+    showBanner("");
+    unsubs.push(db.collection("days").onSnapshot(snap => applyDays(snap.docs), onSubError));
+    unsubs.push(db.doc("settings/main").onSnapshot(s => { S.settings = normSettings(s.exists ? s.data() : null); renderAll(); }, onSubError));
+    renderAll();
+  }
+  function disconnect(status) {
+    unsubs.forEach(u => u()); unsubs = [];
+    Object.assign(S, { db: null, status, loaded: false, readonly: false, days: new Map(), settings: normSettings(null), payView: null });
+    showBanner("");
+    renderAll();
+  }
+
+  async function startClaude() {
     let db = null;
-    try { db = await window.claude?.use?.("db"); } catch (_) {}
+    try { db = await window.claude.use("db"); } catch (_) {}
     if (!db) {
-      S.status = "off";
-      showBanner("Không mở được dữ liệu chấm công. Hãy mở trang này trên claude.ai (điện thoại hoặc laptop) khi đã đăng nhập để chấm công và đồng bộ.");
-      renderAll();
+      disconnect("off");
+      showBanner("Không mở được dữ liệu chấm công. Hãy mở trang này khi đã đăng nhập claude.ai.");
       return;
     }
-    S.db = db;
-    db.collection("days").onSnapshot(snap => applyDays(snap.docs), onSubError);
-    db.doc("settings/main").onSnapshot(s => { S.settings = normSettings(s.exists ? s.data() : null); renderAll(); }, onSubError);
-  })();
+    connect(db);
+  }
+
+  const loadScript = src => new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = res; s.onerror = () => rej(new Error("load " + src));
+    document.head.appendChild(s);
+  });
+  function setSigninErr(msg) { const e = $("#signinErr"); e.textContent = msg; e.hidden = !msg; }
+  const authMsg = e => (e && e.code === "auth/unauthorized-domain"
+    ? "Tên miền này chưa được cho phép trong Firebase (Authentication → Settings → Authorized domains)."
+    : "Chưa đăng nhập được. Thử lại sau ít phút.");
+
+  async function startFirebase() {
+    if (!FIREBASE_CONFIG.apiKey) {
+      disconnect("off");
+      showBanner("Bản này chưa được nối với Firebase nên chưa lưu được dữ liệu.");
+      return;
+    }
+    try {
+      for (const m of ["app", "auth", "firestore"]) await loadScript(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-${m}-compat.js`);
+    } catch (_) {
+      disconnect("error");
+      showBanner("Không tải được Firebase. Kiểm tra mạng rồi tải lại trang.");
+      return;
+    }
+    const fb = window.firebase;
+    fb.initializeApp(FIREBASE_CONFIG);
+    const auth = fb.auth(), fs = fb.firestore();
+    try { await fs.enablePersistence({ synchronizeTabs: true }); } catch (_) {}
+    const provider = new fb.auth.GoogleAuthProvider();
+    $("#signInBtn").addEventListener("click", async () => {
+      setSigninErr("");
+      try { await auth.signInWithPopup(provider); }
+      catch (e) {
+        const c = e && e.code;
+        if (c === "auth/popup-closed-by-user") return;
+        if (c === "auth/popup-blocked" || c === "auth/operation-not-supported-in-this-environment" || c === "auth/cancelled-popup-request") {
+          try { await auth.signInWithRedirect(provider); } catch (e2) { setSigninErr(authMsg(e2)); }
+          return;
+        }
+        setSigninErr(authMsg(e));
+      }
+    });
+    $("#signOutBtn").addEventListener("click", () => auth.signOut());
+    auth.getRedirectResult().catch(e => setSigninErr(authMsg(e)));
+    auth.onAuthStateChanged(user => {
+      $("#signin").hidden = !!user;
+      $("#account").hidden = !user;
+      if (!user) { disconnect("signedout"); return; }
+      $("#accountEmail").textContent = user.email || "Đã đăng nhập";
+      const home = fs.collection("users").doc(user.uid);
+      connect({
+        collection: p => home.collection(p),
+        doc: p => { const [c, id] = p.split("/"); return home.collection(c).doc(id); },
+      });
+    });
+  }
+
+  renderAll();
+  if (ON_CLAUDE) startClaude(); else startFirebase();
 })();
 </script>
