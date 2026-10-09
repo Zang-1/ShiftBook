@@ -82,6 +82,12 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .sync[data-state="saving"]::before{background:var(--accent)}
 .sync[data-state="off"]::before,.sync[data-state="error"]::before{background:var(--danger)}
 .sync[data-state="readonly"]::before{background:var(--warn)}
+.top-r{display:flex;align-items:center;gap:8px;flex:none}
+.refresh-btn{width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.refresh-btn svg{width:16px;height:16px}
+.refresh-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.refresh-btn.spin svg{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .banner{background:var(--warn-soft);color:var(--ink);border-radius:14px;padding:11px 14px;margin-bottom:14px;font-size:14px}
 
 /* thanh tab */
@@ -182,6 +188,24 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .month-head h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-right:auto;white-space:nowrap}
 @media (min-width:640px){.month-head h2{font-size:24px}}
 .month-head .btn,.pay-nav .btn{white-space:nowrap}
+/* chọn tháng (sổ xuống từ nút giữa) */
+.mp-wrap{position:relative;flex:none}
+.mp-btn .chev{width:14px;height:14px;transition:transform .15s}
+.mp-btn[aria-expanded="true"]{border-color:var(--accent)}
+.mp-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.mp-pop{position:absolute;top:calc(100% + 8px);right:-48px;z-index:15;width:272px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow-lg)}
+.mp-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mp-year b{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.mp-year .nav-btn{width:34px;height:34px;font-size:18px;border-radius:10px}
+.mp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mp-m{position:relative;min-height:42px;border-radius:10px;border:1.5px solid transparent;background:var(--surface-2);font-size:14px;font-weight:700;color:var(--ink)}
+.mp-m:hover{border-color:var(--accent);color:var(--accent)}
+.mp-m.now{border-color:var(--accent)}
+.mp-m[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mp-m .has{position:absolute;bottom:5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--work)}
+.mp-m[aria-current="true"] .has{background:currentColor}
+.mp-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}
+.mp-foot i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--work);margin-right:5px;vertical-align:1px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
 @media (min-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .stat{background:var(--surface);border-radius:14px;padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
@@ -308,7 +332,12 @@ label.btn{cursor:pointer}
         <div class="eyebrow" id="todayLabel">&nbsp;</div>
       </div>
     </div>
-    <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
+    <div class="top-r">
+      <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
+      <button class="refresh-btn" id="refreshBtn" type="button" aria-label="Tải lại trang" title="Tải lại trang">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66"/><path d="M20 4v7h-7"/></svg>
+      </button>
+    </div>
   </header>
 
   <nav class="tabbar" role="tablist" aria-label="Các mục">
@@ -384,7 +413,19 @@ label.btn{cursor:pointer}
       <div class="month-head">
         <h2 id="monthLabel">Tháng</h2>
         <button class="nav-btn" id="prevM" type="button" aria-label="Tháng trước">‹</button>
-        <button class="btn sm" id="thisM" type="button">Tháng này</button>
+        <div class="mp-wrap">
+          <button class="btn sm mp-btn" id="thisM" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="monthPick">Chọn tháng
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="mp-pop" id="monthPick" role="dialog" aria-label="Chọn tháng" hidden>
+            <div class="mp-year">
+              <button class="nav-btn" id="mpPrevY" type="button" aria-label="Năm trước">‹</button>
+              <b id="mpYear"></b>
+              <button class="nav-btn" id="mpNextY" type="button" aria-label="Năm sau">›</button>
+            </div>
+            <div class="mp-grid" id="mpGrid"></div>
+            <div class="mp-foot"><span><i></i>có dữ liệu</span><button class="btn sm" id="mpToday" type="button">Tháng này</button></div>
+          </div>
+        </div>
         <button class="nav-btn" id="nextM" type="button" aria-label="Tháng sau">›</button>
       </div>
       <div class="stats" id="stats"></div>
@@ -643,7 +684,7 @@ label.btn{cursor:pointer}
     v = v || {};
     const shifts = Array.isArray(v.shifts)
       ? v.shifts.filter(s => s && TIME_RE.test(s.in) && TIME_RE.test(s.out)).slice(0, 8)
-          .map((s, i) => ({ id: String(s.id || "s" + i), name: String(s.name || "").trim() || `Ca ${i + 1}`, in: s.in, out: s.out }))
+          .map((s, i) => ({ id: String(s.id || "s" + i), name: String(s.name || "").trim() || `Ca ${i + 1}`, in: s.in, out: endOfDay(s.out) }))
       : DEFAULT_SHIFTS;
     const rate = Math.max(0, num(v.rate, 0));
     return { rate, otRate: Math.max(0, num(v.otRate, rate)),
@@ -654,7 +695,11 @@ label.btn{cursor:pointer}
       firstPay: DATE_RE.test(v.firstPay) ? v.firstPay : "" };
   }
   // Ô giờ 24h tự viết (ô type=time của trình duyệt hiện AM/PM theo máy).
-  // Nhận "16", "1600", "16:00", "16g30", "9h30", "930"; "24:00" thành 23:59. Trả null nếu không phải giờ hợp lệ.
+  // Hết ngày ghi là 00:00 (giờ ra < giờ vào = qua đêm, nên 16:00–00:00 vẫn đủ 8 tiếng).
+  // Dữ liệu cũ lưu 23:59 cho "hết ngày" được đổi sang 00:00 khi nạp.
+  const endOfDay = t => (t === "23:59" ? "00:00" : t);
+  const fixOuts = ss => (Array.isArray(ss) ? ss.map(s => (s && s.out === "23:59" ? { ...s, out: "00:00" } : s)) : ss);
+  // Nhận "16", "1600", "16:00", "16g30", "9h30", "930"; "24:00" thành 00:00. Trả null nếu không phải giờ hợp lệ.
   function normTime(v) {
     v = String(v || "").trim().toLowerCase();
     if (!v) return "";
@@ -665,9 +710,9 @@ label.btn{cursor:pointer}
       if (v.length <= 2) { h = +v; m = 0; }
       else { h = +v.slice(0, v.length - 2); m = +v.slice(-2); }
     } else return null;
-    if (h === 24 && m === 0) return "23:59";
+    if (h === 24 && m === 0) h = 0;
     if (h > 23 || m > 59) return null;
-    return `${pad(h)}:${pad(m)}`;
+    return endOfDay(`${pad(h)}:${pad(m)}`);
   }
   const timeInput = (id, val, label, dis) =>
     `<input type="text" class="time24" id="${id}" value="${esc(val || "")}" inputmode="numeric" placeholder="HH:MM" maxlength="5" autocomplete="off" aria-label="${esc(label)}"${dis}>`;
@@ -683,7 +728,7 @@ label.btn{cursor:pointer}
   // ---------- time math ----------
   function sessionMin(key, s) {
     if (!s || !s.in) return 0;
-    // 23:59 nghĩa là làm tới hết ngày (24:00), để ca 16:00–23:59 đủ 8 tiếng
+    // 00:00 (hoặc 23:59 kiểu cũ) nghĩa là làm tới hết ngày, nên ca 16:00–00:00 đủ 8 tiếng
     if (s.out) { let d = (s.out === "23:59" ? 1440 : toMin(s.out)) - toMin(s.in); if (d < 0) d += 1440; return d; }
     const start = dateOf(key); const [h, m] = s.in.split(":").map(Number); start.setHours(h, m, 0, 0);
     return Math.max(0, (Date.now() - start) / 60000);
@@ -1154,7 +1199,7 @@ label.btn{cursor:pointer}
       const ss = ED.sessions.filter(s => s.in || s.out);
       if (!ss.length) return setEdError("Chọn ít nhất một ca, hoặc chọn Nghỉ.");
       for (let i = 0; i < ss.length; i++) {
-        if (!TIME_RE.test(ss[i].in) || !TIME_RE.test(ss[i].out)) return setEdError(`Ca ${i + 1} cần đủ giờ vào và giờ ra, kiểu 24 giờ như 16:00 hoặc 23:59.`);
+        if (!TIME_RE.test(ss[i].in) || !TIME_RE.test(ss[i].out)) return setEdError(`Ca ${i + 1} cần đủ giờ vào và giờ ra, kiểu 24 giờ như 16:00 hoặc 00:00.`);
       }
       body = { status: "work", sessions: ss.map(s => ({ in: s.in, out: s.out })).sort(byIn), note };
     }
@@ -1250,7 +1295,7 @@ label.btn{cursor:pointer}
     const out = {};
     for (const f of DAY_FIELDS) if (v[f] !== undefined && v[f] !== null) out[f] = v[f];
     out.date = k;
-    out.sessions = Array.isArray(v.sessions) ? v.sessions.filter(s => s && TIME_RE.test(s.in) && (!s.out || TIME_RE.test(s.out))).map(s => (s.out ? { in: s.in, out: s.out } : { in: s.in })) : [];
+    out.sessions = Array.isArray(v.sessions) ? v.sessions.filter(s => s && TIME_RE.test(s.in) && (!s.out || TIME_RE.test(s.out))).map(s => (s.out ? { in: s.in, out: endOfDay(s.out) } : { in: s.in })) : [];
     return JSON.parse(JSON.stringify(out));
   }
   $("#backupBtn").addEventListener("click", () => {
@@ -1340,7 +1385,43 @@ label.btn{cursor:pointer}
   });
   $("#prevM").addEventListener("click", () => { const d = new Date(S.view.y, S.view.m - 1, 1); S.view = { y: d.getFullYear(), m: d.getMonth() }; renderMonth(); });
   $("#nextM").addEventListener("click", () => { const d = new Date(S.view.y, S.view.m + 1, 1); S.view = { y: d.getFullYear(), m: d.getMonth() }; renderMonth(); });
-  $("#thisM").addEventListener("click", () => { const d = new Date(); S.view = { y: d.getFullYear(), m: d.getMonth() }; renderMonth(); });
+  // Nút tải lại ở góc trên: đợi lưu xong rồi mới tải lại, để không mất thay đổi đang gửi
+  $("#refreshBtn").addEventListener("click", () => {
+    if (S.pending > 0) { toast("Đang lưu, đợi chút rồi bấm lại nhé."); return; }
+    $("#refreshBtn").classList.add("spin");
+    location.reload();
+  });
+
+  // ---- chọn tháng: nút giữa sổ ra lưới 12 tháng, có chuyển năm ----
+  let mpYear = S.view.y;
+  const mpIsOpen = () => !$("#monthPick").hidden;
+  function renderMonthPick() {
+    const n = new Date(), withData = new Set([...S.days.keys()].map(k => k.slice(0, 7)));
+    $("#mpYear").textContent = mpYear;
+    $("#mpGrid").innerHTML = Array.from({ length: 12 }, (_, m) => {
+      const cur = mpYear === S.view.y && m === S.view.m, now = mpYear === n.getFullYear() && m === n.getMonth();
+      const has = withData.has(`${mpYear}-${pad(m + 1)}`);
+      return `<button type="button" class="mp-m${now ? " now" : ""}" data-pm="${m}"${cur ? ' aria-current="true"' : ""} aria-label="Tháng ${m + 1}, ${mpYear}${has ? ", có dữ liệu" : ""}">T${m + 1}${has ? '<span class="has"></span>' : ""}</button>`;
+    }).join("");
+  }
+  function openMonthPick() {
+    mpYear = S.view.y; renderMonthPick();
+    $("#monthPick").hidden = false; $("#thisM").setAttribute("aria-expanded", "true");
+    $('#mpGrid [aria-current="true"]').focus();
+  }
+  function closeMonthPick(refocus) {
+    if (!mpIsOpen()) return;
+    $("#monthPick").hidden = true; $("#thisM").setAttribute("aria-expanded", "false");
+    if (refocus) $("#thisM").focus();
+  }
+  function pickMonth(y, m) { S.view = { y, m }; renderMonth(); closeMonthPick(true); }
+  $("#thisM").addEventListener("click", () => mpIsOpen() ? closeMonthPick() : openMonthPick());
+  $("#mpPrevY").addEventListener("click", () => { mpYear--; renderMonthPick(); });
+  $("#mpNextY").addEventListener("click", () => { mpYear++; renderMonthPick(); });
+  $("#mpGrid").addEventListener("click", e => { const b = e.target.closest("[data-pm]"); if (b) pickMonth(mpYear, +b.dataset.pm); });
+  $("#mpToday").addEventListener("click", () => { const d = new Date(); pickMonth(d.getFullYear(), d.getMonth()); });
+  document.addEventListener("click", e => { if (mpIsOpen() && !e.target.closest(".mp-wrap")) closeMonthPick(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && mpIsOpen()) closeMonthPick(true); });
   $("#exXlsx").addEventListener("click", () => doExport("xlsx"));
   $("#exCsv").addEventListener("click", () => doExport("csv"));
 
@@ -1370,7 +1451,7 @@ label.btn{cursor:pointer}
   function saveSettings(shifts) {
     if (!canWrite()) return;
     if (!Array.isArray(shifts)) shifts = readShifts();
-    if (shifts.some(s => !TIME_RE.test(s.in) || !TIME_RE.test(s.out))) { showShiftErr("Mỗi ca cần đủ giờ vào và giờ ra, kiểu 24 giờ như 16:00 hoặc 23:59."); return; }
+    if (shifts.some(s => !TIME_RE.test(s.in) || !TIME_RE.test(s.out))) { showShiftErr("Mỗi ca cần đủ giờ vào và giờ ra, kiểu 24 giờ như 16:00 hoặc 00:00."); return; }
     showShiftErr("");
     const v = normSettings({
       rate: Number($("#setRate").value) || 0,
@@ -1419,7 +1500,7 @@ label.btn{cursor:pointer}
   // ---------- data ----------
   function applyDays(docs) {
     const m = new Map();
-    for (const d of docs) { if (!d.exists) continue; const v = d.data(); if (v && typeof v === "object") m.set(d.id, v); }
+    for (const d of docs) { if (!d.exists) continue; const v = d.data(); if (v && typeof v === "object") m.set(d.id, Array.isArray(v.sessions) ? { ...v, sessions: fixOuts(v.sessions) } : v); }
     S.days = m; S.loaded = true;
     if (S.status === "connecting") S.status = "live";
     renderAll();
