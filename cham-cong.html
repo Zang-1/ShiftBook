@@ -1,51 +1,63 @@
 <title>ShiftBook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap">
 <style>
-/* Layout: phone = one column (thẻ chấm công → tuần → tháng → cài đặt); laptop = thẻ + tuần + cài đặt bên trái, lịch tháng bên phải */
+/* Layout: 4 tab (Hôm nay · Lịch · Lương · Cài đặt). Điện thoại: thanh tab dưới đáy; laptop: thanh tab dưới tiêu đề.
+   Tab Hôm nay: thẻ tối nổi bật (giờ hôm nay) + các nút ca to màu cam/xanh, thứ dùng mỗi ngày nằm trên cùng. */
 :root{
-  --bg:#EDF0F3; --surface:#FFFFFF; --surface-2:#F4F6F8; --ink:#141C26; --muted:#5D6977; --line:#D6DDE4;
-  --accent:#1D56C9; --accent-ink:#FFFFFF; --accent-soft:#E2EBFB;
-  --work:#1E7F55; --work-soft:#DDF1E7;
-  --phep:#6B4FC8; --phep-soft:#ECE7FA;
-  --om:#A86400; --om-soft:#FBEFD9;
-  --le:#C23A2B; --le-soft:#FBE3DF;
-  --lich:#5D6977; --lich-soft:#E3E8ED;
-  --warn:#A86400; --warn-soft:#FBEFD9;
-  --danger:#C23A2B;
-  --backdrop:rgba(20,28,38,.42);
-  --shadow:0 1px 2px rgba(20,28,38,.06),0 10px 28px rgba(20,28,38,.07);
+  --bg:#EEF1F6; --surface:#FFFFFF; --surface-2:#F4F6FA; --ink:#0F1728; --muted:#5D6A7D; --line:#E1E6EE;
+  --accent:#F2611D; --accent-ink:#FFFFFF; --accent-soft:#FFE8DB;
+  --work:#0E9C77; --work-ink:#FFFFFF; --work-soft:#D8F4EA;
+  --phep:#6A4CD6; --phep-soft:#ECE7FC;
+  --om:#AD6800; --om-soft:#FCEED6;
+  --le:#D23B2C; --le-soft:#FDE3DF;
+  --lich:#5D6A7D; --lich-soft:#E6EBF2;
+  --warn:#AD6800; --warn-soft:#FCEED6;
+  --danger:#D23B2C;
+  --hero:#121B2B; --hero-ink:#FFFFFF; --hero-muted:#A3B0C3; --hero-line:#26324A;
+  --backdrop:rgba(10,15,25,.5);
+  --shadow:0 1px 2px rgba(15,23,40,.05),0 8px 24px rgba(15,23,40,.07);
+  --shadow-lg:0 2px 4px rgba(15,23,40,.06),0 18px 40px rgba(15,23,40,.14);
   --f-ui:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
-  --r:14px;
+  --r:18px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E131A; --surface:#161D27; --surface-2:#1C2531; --ink:#E5EBF2; --muted:#93A0AF; --line:#2A3443;
-  --accent:#6C9BFF; --accent-ink:#0B1424; --accent-soft:#1B2A47;
-  --work:#4CC38A; --work-soft:#16332A; --phep:#A890FF; --phep-soft:#2A2448;
-  --om:#F0A33C; --om-soft:#3A2C14; --le:#FF7B6B; --le-soft:#3D1F1C;
-  --lich:#9AA7B6; --lich-soft:#232C38; --warn:#F0A33C; --warn-soft:#3A2C14; --danger:#FF7B6B;
-  --backdrop:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);
+  --bg:#090E16; --surface:#121925; --surface-2:#19222F; --ink:#EEF2F7; --muted:#98A4B5; --line:#232F40;
+  --accent:#FF7A33; --accent-ink:#1C0C03; --accent-soft:#3B2214;
+  --work:#2ED29C; --work-ink:#03261B; --work-soft:#0E3428;
+  --phep:#A992FF; --phep-soft:#2A2449; --om:#F4A63E; --om-soft:#3A2B13; --le:#FF7D6D; --le-soft:#3E1F1B;
+  --lich:#9AA6B7; --lich-soft:#212B39; --warn:#F4A63E; --warn-soft:#3A2B13; --danger:#FF7D6D;
+  --hero:#18233A; --hero-ink:#FFFFFF; --hero-muted:#9EAECA; --hero-line:#2A3955;
+  --backdrop:rgba(0,0,0,.62);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.45);
   color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0E131A; --surface:#161D27; --surface-2:#1C2531; --ink:#E5EBF2; --muted:#93A0AF; --line:#2A3443;
-  --accent:#6C9BFF; --accent-ink:#0B1424; --accent-soft:#1B2A47;
-  --work:#4CC38A; --work-soft:#16332A; --phep:#A890FF; --phep-soft:#2A2448;
-  --om:#F0A33C; --om-soft:#3A2C14; --le:#FF7B6B; --le-soft:#3D1F1C;
-  --lich:#9AA7B6; --lich-soft:#232C38; --warn:#F0A33C; --warn-soft:#3A2C14; --danger:#FF7B6B;
-  --backdrop:rgba(0,0,0,.6); --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.28);
+  --bg:#090E16; --surface:#121925; --surface-2:#19222F; --ink:#EEF2F7; --muted:#98A4B5; --line:#232F40;
+  --accent:#FF7A33; --accent-ink:#1C0C03; --accent-soft:#3B2214;
+  --work:#2ED29C; --work-ink:#03261B; --work-soft:#0E3428;
+  --phep:#A992FF; --phep-soft:#2A2449; --om:#F4A63E; --om-soft:#3A2B13; --le:#FF7D6D; --le-soft:#3E1F1B;
+  --lich:#9AA6B7; --lich-soft:#212B39; --warn:#F4A63E; --warn-soft:#3A2B13; --danger:#FF7D6D;
+  --hero:#18233A; --hero-ink:#FFFFFF; --hero-muted:#9EAECA; --hero-line:#2A3955;
+  --backdrop:rgba(0,0,0,.62);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.45);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-button:disabled{cursor:not-allowed;opacity:.5}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button:disabled{cursor:not-allowed;opacity:.45}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* màu theo loại ngày */
 .t-work{--c:var(--work);--cs:var(--work-soft)}
 .t-phep{--c:var(--phep);--cs:var(--phep-soft)}
 .t-om{--c:var(--om);--cs:var(--om-soft)}
@@ -55,219 +67,261 @@ button:disabled{cursor:not-allowed;opacity:.5}
 .t-idle{--c:var(--muted);--cs:var(--surface-2)}
 .t-accent{--c:var(--accent);--cs:var(--accent-soft)}
 
-.app{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 56px}
-.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.eyebrow{color:var(--muted);font-size:13px;font-weight:500}
-h1{margin:0;font-size:26px;line-height:1.15;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
-h2{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
-h3{margin:0;font-size:15px;font-weight:600}
-.sync{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px}
-.sync::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+/* khung trang */
+.app{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:14px calc(104px + env(safe-area-inset-bottom,0px))}
+@media (min-width:900px){.app{padding-block:22px 56px}}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:38px;height:38px;flex:none;border-radius:11px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 40%,transparent)}
+.logo svg{width:22px;height:22px}
+.brand h1{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.eyebrow{color:var(--muted);font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sync{display:inline-flex;align-items:center;gap:7px;flex:none;font-size:12px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.sync::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .sync[data-state="live"]::before{background:var(--work)}
 .sync[data-state="saving"]::before{background:var(--accent)}
 .sync[data-state="off"]::before,.sync[data-state="error"]::before{background:var(--danger)}
 .sync[data-state="readonly"]::before{background:var(--warn)}
-.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.account{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
-.signin{margin-bottom:18px;padding:20px}
-.signin p{color:var(--muted);max-width:60ch;margin:8px 0 14px}
-.signin .ed-error{margin-top:12px}
-label.btn{cursor:pointer}
-.banner{background:var(--warn-soft);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
+.banner{background:var(--warn-soft);color:var(--ink);border-radius:14px;padding:11px 14px;margin-bottom:14px;font-size:14px}
 
-.grid{display:grid;gap:18px;grid-template-columns:1fr;grid-template-areas:"today" "week" "month" "settings"}
-@media (min-width:920px){
-  .grid{grid-template-columns:minmax(320px,380px) minmax(0,1fr);grid-template-areas:"today month" "week month" "settings month";grid-template-rows:auto auto 1fr}
+/* thanh tab */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:15;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border:0;border-radius:14px;background:transparent;color:var(--muted);font-size:12px;font-weight:600}
+.tab svg{width:23px;height:23px}
+.tab[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+@media (min-width:900px){
+  .tabbar{position:sticky;top:10px;bottom:auto;display:flex;gap:6px;width:max-content;margin:0 0 18px;padding:5px;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .tab{flex-direction:row;gap:8px;padding:9px 16px;font-size:14px}
+  .tab svg{width:19px;height:19px}
 }
-.a-today{grid-area:today}.a-week{grid-area:week}.a-month{grid-area:month;min-width:0}.a-settings{grid-area:settings}
-.grid>*{align-self:start}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
 
-/* Thẻ chấm công */
-.punch{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px 20px 18px;box-shadow:var(--shadow)}
-.punch::before{content:"";position:absolute;left:20px;right:20px;top:9px;height:7px;background:radial-gradient(circle at 3.5px 3.5px,var(--bg) 2.6px,transparent 3.2px) 0 0/15px 7px repeat-x}
-.punch-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.card-tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.clock{font-size:15px;font-weight:700}
-.clock small{font-size:11px;color:var(--muted);font-weight:500}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:600;background:var(--cs);color:var(--c)}
-.pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
-.pill.live .dot{animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
-.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
-.big{font-size:52px;line-height:1;font-weight:700;letter-spacing:-.03em;margin-top:14px}
-.big-label{color:var(--muted);font-size:13.5px;margin-top:6px;min-height:20px}
-.pick-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:18px}
-.pick-head span{font-size:13px;font-weight:600}
-.shift-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:8px}
-.shift-btn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);text-align:left;min-width:0;transition:transform .08s ease}
-.shift-btn .sn{font-weight:700;font-size:14.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.shift-btn .st{font-size:17px;font-weight:700}
-.shift-btn .sc{font-size:12px;color:var(--muted);font-weight:600;margin-top:2px}
-.shift-btn:hover:not(:disabled){border-color:var(--accent)}
-.shift-btn.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.shift-btn.on .sc{color:inherit;opacity:.85}
-.shift-btn:active:not(:disabled){transform:scale(.98)}
-.pick-empty{color:var(--muted);font-size:13.5px;margin:0}
-.ed-quick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;align-items:center}
-.ed-quick .k{font-size:12.5px;color:var(--muted);font-weight:600;margin-right:2px}
-.qchip{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
-.qchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.sh-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;margin-bottom:8px}
-.sh-row input{width:100%;min-height:40px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:6px 8px;font-size:14px;min-width:0}
-.time24{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.ed-pay{margin-top:14px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:var(--surface-2)}
-.ed-pay summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:600;font-size:14px}
-.ed-pay summary::-webkit-details-marker{display:none}
-.ed-pay summary b{font-size:15px}
-.ed-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.ed-pay .field input{background:var(--surface)}
-.ed-pay .hint{display:block;margin:8px 0 0}
-.tag{display:inline-block;margin-left:6px;padding:0 6px;border-radius:5px;font-size:10.5px;font-weight:700;font-family:var(--f-ui);letter-spacing:.03em;background:var(--cs,var(--surface-2));color:var(--c,var(--muted));vertical-align:1px}
-.pay-btn{background:none;border:0;padding:0;font:inherit;font-family:var(--f-mono);font-weight:700;white-space:nowrap;text-decoration:underline dotted;text-underline-offset:3px}
-.time24[aria-invalid="true"]{border-color:var(--danger)!important}
-.sh-err{color:var(--danger);font-size:12.5px;font-weight:600}
-.stamps{list-style:none;margin:16px 0 0;padding:0;font-family:var(--f-mono);font-size:13.5px;font-variant-numeric:tabular-nums}
-.stamps li{display:grid;grid-template-columns:auto auto auto auto 1fr;align-items:baseline;gap:6px 10px;padding:8px 0;border-top:1px dashed var(--line)}
-.stamps .lbl{font-size:10.5px;letter-spacing:.1em;color:var(--muted)}
-.stamps b{font-weight:700}
-.stamps .dur{text-align:right;color:var(--muted)}
-.stamps .empty{display:block;color:var(--muted);font-family:var(--f-ui);font-size:13.5px}
-.punch-actions{display:flex;gap:8px;margin-top:12px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600}
-.btn:hover:not(:disabled){background:var(--surface-2)}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* thẻ chung */
+.card{background:var(--surface);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sec-title h2{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.sec-meta{color:var(--muted);font-size:13px}
+.stack{display:grid;gap:14px}
+.panel-grid{display:grid;gap:14px}
+@media (min-width:900px){.panel-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}}
+
+/* nút */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:14.5px;font-weight:600;color:var(--ink)}
+.btn:hover:not(:disabled){border-color:color-mix(in srgb,var(--ink) 25%,var(--line))}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 30%,transparent)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.06)}
 .btn.danger{background:var(--danger);color:var(--surface);border-color:var(--danger)}
 .btn.danger-ghost{color:var(--danger)}
 .btn.grow{flex:1}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13.5px;border-radius:10px}
+.nav-btn{width:40px;height:40px;flex:none;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:20px;line-height:1;color:var(--ink)}
+.nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.linkish{color:var(--accent);background:none;border:0;padding:0;font-weight:700;font-size:inherit;text-decoration:underline;text-underline-offset:3px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--cs);color:var(--c)}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.live .dot{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-/* Tuần */
-.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.sec-meta{color:var(--muted);font-size:13px;margin-top:2px}
-.week-total{font-family:var(--f-mono);font-weight:700;font-size:17px}
-.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:12px}
-.wd{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:9px;border:1px solid transparent;background:var(--cs,var(--surface-2));color:var(--ink);min-width:0}
-.wd .w1{font-size:11px;font-weight:600;color:var(--muted)}
-.wd .w2{font-size:13px;font-weight:700}
-.wd .w3{font-family:var(--f-mono);font-size:11px;font-weight:700;color:var(--c,var(--muted));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.wd.today{border-color:var(--ink)}
+/* đăng nhập */
+.signin{margin-bottom:14px;padding:22px;border:2px solid var(--accent)}
+.signin h2{font-size:19px;font-weight:800}
+.signin p{color:var(--muted);max-width:60ch;margin:8px 0 16px}
+.signin .ed-error{margin-top:12px}
 
-/* Tháng */
-.month-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.pay{padding:18px;box-shadow:var(--shadow);margin-bottom:22px}
-.pay-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-.pay-head h2{font-size:22px;letter-spacing:-.02em;margin-top:2px}
-.pay-nav{display:flex;gap:8px;align-items:center}
-.pay-body{display:grid;gap:16px;margin-top:16px;grid-template-columns:1fr}
-@media (min-width:640px){.pay-body{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}}
-.pay-amount .k{font-size:12.5px;color:var(--muted);font-weight:500}
-.pay-amount .v{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px;overflow-wrap:anywhere}
-.pay-amount .s{font-size:12.5px;color:var(--muted);margin-top:6px}
-.pay-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;margin:0;align-content:start}
-.pay-facts div{min-width:0}
-.pay-facts dt{font-size:12px;color:var(--muted)}
-.pay-facts dd{margin:0;font-family:var(--f-mono);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
-.pay .pill{margin-top:14px}
-.month-head h2{font-size:22px;margin-right:auto;letter-spacing:-.02em}
-.nav-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:18px;line-height:1}
-.nav-btn:hover{background:var(--surface-2)}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
-@media (min-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
-.stat.wide{grid-column:span 2}
-.stat .k{font-size:12.5px;color:var(--muted);font-weight:500}
-.stat .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:20px;font-weight:700;margin-top:2px;overflow-wrap:anywhere}
-.stat.wide .v{font-size:28px}
-.stat .s{font-size:12.5px;color:var(--muted);margin-top:2px}
-.stat .s a,.linkish{color:var(--accent);background:none;border:0;padding:0;font-weight:600;text-decoration:underline;text-underline-offset:2px;font-size:inherit}
+/* ===== Tab Hôm nay ===== */
+.hero{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-ink);border-radius:22px;padding:20px 20px 18px;box-shadow:var(--shadow-lg)}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 45%,transparent),transparent 70%);opacity:.55;pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative}
+.hero .pill{background:color-mix(in srgb,var(--c) 22%,transparent);color:color-mix(in srgb,var(--c) 70%,#fff)}
+.hero .pill.t-idle{background:rgba(255,255,255,.1);color:var(--hero-muted)}
+.clock{font-size:15px;font-weight:700;color:var(--hero-ink)}
+.clock small{font-size:11px;color:var(--hero-muted);font-weight:500}
+.hero-label{color:var(--hero-muted);font-size:13px;font-weight:600;margin-top:16px;position:relative}
+.big{font-size:58px;line-height:1;font-weight:800;letter-spacing:-.04em;margin-top:4px;position:relative}
+.big-label{color:var(--hero-muted);font-size:14px;margin-top:8px;min-height:21px;position:relative}
 
-.cal{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px}
-.cal-wd,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
-.cal-wd div{text-align:center;font-size:11.5px;font-weight:600;color:var(--muted);padding-bottom:6px;letter-spacing:.04em}
-.day{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;min-height:58px;padding:6px;border-radius:8px;border:1px solid transparent;background:var(--cs,transparent);text-align:left;min-width:0}
-@media (min-width:640px){.day{min-height:72px;padding:7px 8px}}
-.day:hover{border-color:var(--line)}
-.day .dn{font-size:13px;font-weight:600}
-.day .dv{font-family:var(--f-mono);font-size:11px;font-weight:700;color:var(--c,var(--muted));max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (min-width:640px){.day .dv{font-size:12.5px}}
-.day.future .dn{color:var(--muted)}
-.day.today{border-color:var(--ink)}
-.day.today .dn{font-weight:700}
-.day .note-mark{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.pick{padding:18px}
+.pick-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.pick-head h2{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.shift-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+.shift-btn{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 14px 13px;border-radius:16px;
+  border:2px solid var(--line);background:var(--surface-2);text-align:left;min-width:0;color:var(--ink);transition:transform .08s ease,border-color .15s ease,background .15s ease}
+.shift-btn .sn{font-weight:700;font-size:14px;color:var(--muted);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shift-btn .st{font-family:var(--f-mono);font-size:17px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (min-width:640px){.shift-btn .st{font-size:20px}}
+.shift-btn .sc{margin-top:6px;font-size:12px;font-weight:700;color:var(--accent)}
+.shift-btn:hover:not(:disabled){border-color:var(--accent)}
+.shift-btn:active:not(:disabled){transform:scale(.97)}
+.shift-btn.on{background:var(--work);border-color:var(--work);color:var(--work-ink);box-shadow:0 6px 18px color-mix(in srgb,var(--work) 35%,transparent)}
+.shift-btn.on .sn,.shift-btn.on .sc{color:var(--work-ink);opacity:.9}
+.pick-empty{color:var(--muted);font-size:14px;margin:0}
+.punch-actions{display:flex;gap:10px;margin-top:12px}
+
+.mini-pay{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;background:var(--surface);color:var(--ink);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.mini-pay:hover{box-shadow:var(--shadow-lg)}
+.mini-pay .mp-body{flex:1;min-width:0}
+.mini-pay .k{font-size:12.5px;color:var(--muted);font-weight:600}
+.mini-pay .v{font-family:var(--f-mono);font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.02em;line-height:1.2;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.mini-pay .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.mini-pay .chev{font-size:26px;color:var(--muted);flex:none}
+
+.week-total{font-family:var(--f-mono);font-weight:800;font-size:18px}
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;border-radius:12px;border:2px solid transparent;background:var(--cs,var(--surface-2));color:var(--ink);min-width:0}
+.wd .w1{font-size:11px;font-weight:700;color:var(--muted)}
+.wd .w2{font-size:15px;font-weight:800}
+.wd .w3{font-family:var(--f-mono);font-size:10.5px;font-weight:700;color:var(--c,var(--muted));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.wd.today{border-color:var(--accent)}
 .day.is-open .dv::before,.wd.is-open .w3::before{content:"● ";animation:pulse 1.6s ease-in-out infinite}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12.5px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.legend i{width:11px;height:11px;border-radius:3px;background:var(--cs);border:1px solid var(--c)}
+.stamps{display:none}
 
-.table-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:22px}
-.export{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.export select{min-height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);padding:0 10px;font-size:14px}
-.table-wrap{overflow-x:auto;margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
-th{text-align:left;font-size:12px;font-weight:600;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+/* ===== Tab Lịch ===== */
+.month-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.month-head h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-right:auto;white-space:nowrap}
+@media (min-width:640px){.month-head h2{font-size:24px}}
+.month-head .btn,.pay-nav .btn{white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media (min-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stat{background:var(--surface);border-radius:14px;padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
+.stat .k{font-size:12px;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:21px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+.stat .s{font-size:12px;color:var(--muted);margin-top:2px}
+.cal{padding:12px}
+.cal-wd,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal-wd div{text-align:center;font-size:11.5px;font-weight:700;color:var(--muted);padding-bottom:6px}
+.day{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;min-height:60px;padding:6px 5px;border-radius:11px;border:2px solid transparent;background:var(--cs,var(--surface-2));text-align:left;min-width:0;color:var(--ink)}
+@media (min-width:640px){.day{min-height:76px;padding:8px 9px}}
+.day:hover{border-color:color-mix(in srgb,var(--accent) 60%,transparent)}
+.day .dn{font-size:13.5px;font-weight:700}
+.day .dv{font-family:var(--f-mono);font-size:11px;font-weight:800;color:var(--c,var(--muted));max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (min-width:640px){.day .dv{font-size:13px}}
+.day.future .dn{color:var(--muted);font-weight:500}
+.day.today{border-color:var(--accent)}
+.day .note-mark{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 4px 0;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px;background:var(--cs);border:2px solid var(--c)}
+.table-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:22px 0 10px}
+.table-head h3{font-size:17px;font-weight:700}
+.table-wrap{overflow-x:auto;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+th{text-align:left;font-size:12px;font-weight:700;color:var(--muted);padding:12px 12px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child td{border-bottom:0}
 td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 td.ses{font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums}
-td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
-.row-btn{background:none;border:0;padding:0;font-weight:600;text-align:left;white-space:nowrap}
+td.note{color:var(--muted);max-width:240px;overflow-wrap:anywhere}
+.row-btn{background:none;border:0;padding:0;font-weight:700;text-align:left;white-space:nowrap;color:var(--ink)}
 .row-btn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
-.chip{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--cs);color:var(--c);font-family:var(--f-ui)}
-.empty-row td{color:var(--muted);text-align:center;padding:22px 12px}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--cs);color:var(--c);font-family:var(--f-ui)}
+.tag{display:inline-block;margin-left:6px;padding:0 6px;border-radius:6px;font-size:10.5px;font-weight:800;font-family:var(--f-ui);background:var(--cs,var(--surface-2));color:var(--c,var(--muted));vertical-align:1px}
+.pay-btn{background:none;border:0;padding:0;font:inherit;font-family:var(--f-mono);font-weight:800;white-space:nowrap;color:var(--ink);text-decoration:underline dotted;text-underline-offset:3px}
+.empty-row td{color:var(--muted);text-align:center;padding:24px 12px}
+.export{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.export select{min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);padding:0 12px;font-size:14px}
 
-/* Cài đặt */
-.settings summary{cursor:pointer;font-weight:700;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
-.settings summary::-webkit-details-marker{display:none}
-.settings summary::after{content:"+";font-family:var(--f-mono);color:var(--muted);font-size:18px}
-.settings[open] summary::after{content:"−"}
-.form{display:grid;gap:12px;margin-top:14px}
-.field{display:grid;gap:5px}
-.field>span{font-size:13px;font-weight:600}
-.field small{color:var(--muted);font-size:12.5px}
-.field input[type=number],.field input[type=date],.field select,.field textarea,.tf input{width:100%;min-height:40px;border:1px solid var(--line);background:var(--surface-2);border-radius:9px;padding:6px 10px;font-size:15px}
-.field textarea{resize:vertical;min-height:64px}
-.check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
-.check input{margin-top:4px;width:17px;height:17px;accent-color:var(--accent)}
+/* ===== Tab Lương ===== */
+.pay{padding:22px;border-top:5px solid var(--accent)}
+.pay-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.card-tag{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pay-head h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+.pay-nav{display:flex;gap:8px;align-items:center}
+.pay-amount{margin-top:18px}
+.pay-amount .k{font-size:13px;color:var(--muted);font-weight:600}
+.pay-amount .v{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-top:2px;color:var(--accent);overflow-wrap:anywhere}
+.pay-amount .s{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6}
+.pay-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 0}
+@media (min-width:640px){.pay-facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.pay-facts div{min-width:0;background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.pay-facts dt{font-size:12px;color:var(--muted);font-weight:600}
+.pay-facts dd{margin:2px 0 0;font-family:var(--f-mono);font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.pay .pill{margin-top:16px}
+
+/* ===== Tab Cài đặt ===== */
+.set-card h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.set-card > p{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+.form{display:grid;gap:14px}
+.field{display:grid;gap:6px}
+.field>span{font-size:13.5px;font-weight:700}
+.field small,.hint{color:var(--muted);font-size:12.5px}
+.field input[type=number],.field input[type=date],.field input[type=text],.field select,.field textarea,.tf input{width:100%;min-height:44px;border:1.5px solid var(--line);background:var(--surface-2);border-radius:11px;padding:6px 12px;font-size:15px}
+.field textarea{resize:vertical;min-height:68px}
+.field input:focus,.field select:focus,.field textarea:focus,.tf input:focus,.sh-row input:focus{border-color:var(--accent);outline:none}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.account-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.account-row span{font-weight:600;overflow-wrap:anywhere}
+.sh-row{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;margin-bottom:8px}
+.sh-row input{width:100%;min-height:44px;border:1.5px solid var(--line);background:var(--surface-2);border-radius:11px;padding:6px 9px;font-size:14px;min-width:0}
+.sh-err{color:var(--danger);font-size:12.5px;font-weight:700}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+label.btn{cursor:pointer}
+.time24{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.time24[aria-invalid="true"]{border-color:var(--danger)!important}
 
-/* Sheet sửa ngày */
+/* ===== Cửa sổ sửa ngày ===== */
 .backdrop{position:fixed;inset:0;background:var(--backdrop);display:flex;align-items:flex-end;justify-content:center;z-index:20;padding-top:env(safe-area-inset-top,0px)}
 @media (min-width:640px){.backdrop{align-items:center;padding:24px}}
-.sheet{background:var(--surface);width:100%;max-width:480px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow)}
-@media (min-width:640px){.sheet{border-radius:18px;padding-bottom:18px}}
+.sheet{background:var(--surface);width:100%;max-width:500px;max-height:92%;overflow:auto;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:var(--shadow-lg)}
+@media (min-width:640px){.sheet{border-radius:22px;padding-bottom:20px}}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-.sheet-head h3{font-size:18px;font-weight:700}
-.icon-btn{width:36px;height:36px;flex:none;border-radius:9px;border:1px solid var(--line);background:var(--surface);font-size:18px;line-height:1;color:var(--muted)}
-.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:3px;gap:3px;margin-bottom:14px}
-.seg button{border:0;background:transparent;border-radius:8px;min-height:36px;font-weight:600;font-size:14px;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.sheet-head h3{font-size:19px;font-weight:800}
+.icon-btn{width:40px;height:40px;flex:none;border-radius:11px;border:1.5px solid var(--line);background:var(--surface);font-size:19px;line-height:1;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border-radius:13px;padding:4px;gap:4px;margin-bottom:14px}
+.seg button{border:0;background:transparent;border-radius:10px;min-height:40px;font-weight:700;font-size:14.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.ed-quick{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;align-items:center}
+.ed-quick .k{font-size:12.5px;color:var(--muted);font-weight:700;margin-right:2px}
+.qchip{border:1.5px solid var(--line);background:var(--surface-2);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;color:var(--ink)}
+.qchip[aria-pressed="true"]{background:var(--work);color:var(--work-ink);border-color:var(--work)}
 .ses-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:end;margin-bottom:10px}
-.ses-n{font-size:12px;font-weight:600;color:var(--muted);padding-bottom:11px;white-space:nowrap}
+.ses-n{font-size:12px;font-weight:700;color:var(--muted);padding-bottom:12px;white-space:nowrap}
 .tf{display:grid;gap:3px;min-width:0}
-.tf span{font-size:11.5px;color:var(--muted);font-weight:600}
+.tf span{font-size:11.5px;color:var(--muted);font-weight:700}
 .tf input{font-family:var(--f-mono)}
-.hint{font-size:12.5px;color:var(--muted);margin:2px 0 12px}
-.ed-error{color:var(--danger);font-size:13.5px;font-weight:600;margin:10px 0 0}
+.sheet .hint{margin:4px 0 12px}
+.ed-pay{margin-top:14px;border-radius:14px;padding:12px 14px;background:var(--surface-2)}
+.ed-pay summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:14.5px}
+.ed-pay summary::-webkit-details-marker{display:none}
+.ed-pay summary b{font-size:16px;color:var(--accent)}
+.ed-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ed-pay .field input{background:var(--surface)}
+.ed-pay .hint{display:block;margin:8px 0 0}
+.ed-error{color:var(--danger);font-size:13.5px;font-weight:700;margin:10px 0 0}
 .sheet-foot{display:flex;gap:8px;align-items:center;margin-top:16px;flex-wrap:wrap}
 .sheet-foot .spacer{flex:1}
-.confirm{margin-top:14px;padding:12px;border-radius:10px;background:var(--le-soft);display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+.confirm{margin-top:14px;padding:12px;border-radius:12px;background:var(--le-soft);display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
 .confirm p{margin:0;flex:1 1 180px}
 
-.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;z-index:30;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;z-index:30;max-width:calc(100% - 32px);box-shadow:var(--shadow-lg)}
+@media (min-width:900px){.toast{bottom:24px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
 <div class="app">
   <header class="top">
-    <div>
-      <div class="eyebrow" id="todayLabel">&nbsp;</div>
-      <h1>ShiftBook</h1>
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
+      <div style="min-width:0">
+        <h1>ShiftBook</h1>
+        <div class="eyebrow" id="todayLabel">&nbsp;</div>
+      </div>
     </div>
-    <div class="top-right">
-      <span class="account" id="account" hidden><span id="accountEmail"></span><button type="button" class="linkish" id="signOutBtn">Đăng xuất</button></span>
-      <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
-    </div>
+    <span class="sync" id="sync" data-state="connecting">Đang kết nối…</span>
   </header>
+
+  <nav class="tabbar" role="tablist" aria-label="Các mục">
+    <button class="tab" role="tab" type="button" data-tab="today" aria-selected="true" aria-controls="tab-today">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Hôm nay</button>
+    <button class="tab" role="tab" type="button" data-tab="calendar" aria-selected="false" aria-controls="tab-calendar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Lịch</button>
+    <button class="tab" role="tab" type="button" data-tab="pay" aria-selected="false" aria-controls="tab-pay">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12.5" rx="3"/><circle cx="12" cy="12.25" r="2.6"/><path d="M6 9.5v.01M18 15v.01"/></svg>Lương</button>
+    <button class="tab" role="tab" type="button" data-tab="settings" aria-selected="false" aria-controls="tab-settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2.2"/><circle cx="10" cy="17" r="2.2"/></svg>Cài đặt</button>
+  </nav>
+
   <div class="banner" id="banner" hidden></div>
   <section class="card signin" id="signin" hidden aria-labelledby="signinH">
     <h2 id="signinH">Đăng nhập để dùng ShiftBook</h2>
@@ -276,66 +330,65 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     <p class="ed-error" id="signinErr" hidden></p>
   </section>
 
-  <main class="grid">
-    <article class="punch a-today" aria-labelledby="punchTag">
-      <div class="punch-head">
-        <span class="card-tag" id="punchTag">Thẻ chấm công · hôm nay</span>
-        <span class="clock mono" id="clock">--:--</span>
-      </div>
-      <div class="status-row"><span class="pill t-idle" id="statePill"><span class="dot"></span><span id="stateText">Đang tải dữ liệu</span></span></div>
-      <div class="big mono" id="todayTotal">0h00</div>
-      <div class="big-label" id="todayLabel2">Dữ liệu của bạn sẽ hiện ở đây sau khi kết nối.</div>
-      <div class="pick-head"><span>Chọn ca đã làm hôm nay</span><button type="button" class="linkish" id="goShifts">Sửa danh sách ca</button></div>
-      <div class="shift-pick" id="shiftPick"></div>
-      <ol class="stamps" id="stamps"></ol>
-      <div class="punch-actions">
-        <button class="btn grow" id="markOffBtn" type="button">Hôm nay nghỉ</button>
-        <button class="btn grow" id="editTodayBtn" type="button">Sửa giờ / ghi chú</button>
-      </div>
-    </article>
+  <main>
+    <!-- ===== Hôm nay ===== -->
+    <section class="panel-grid" id="tab-today" role="tabpanel" data-panel="today">
+      <div class="stack">
+        <article class="hero" aria-labelledby="heroLabel">
+          <div class="hero-top">
+            <span class="pill t-idle" id="statePill"><span class="dot"></span><span id="stateText">Đang tải dữ liệu</span></span>
+            <span class="clock mono" id="clock">--:--</span>
+          </div>
+          <div class="hero-label" id="heroLabel">Giờ làm hôm nay</div>
+          <div class="big mono" id="todayTotal">0h00</div>
+          <div class="big-label" id="todayLabel2">Dữ liệu của bạn sẽ hiện ở đây sau khi kết nối.</div>
+          <ol class="stamps" id="stamps"></ol>
+        </article>
 
-    <section class="card a-week" aria-labelledby="weekH">
-      <div class="sec-head">
-        <h2 id="weekH">Tuần này</h2>
-        <span class="week-total" id="weekTotal">0h00</span>
+        <section class="card pick" aria-labelledby="pickH">
+          <div class="pick-head">
+            <h2 id="pickH">Hôm nay làm ca nào?</h2>
+            <button type="button" class="linkish" id="goShifts">Sửa ca</button>
+          </div>
+          <div class="shift-pick" id="shiftPick"></div>
+          <div class="punch-actions">
+            <button class="btn grow" id="markOffBtn" type="button">Hôm nay nghỉ</button>
+            <button class="btn grow" id="editTodayBtn" type="button">Giờ khác / ghi chú</button>
+          </div>
+        </section>
       </div>
-      <div class="sec-meta" id="weekMeta">&nbsp;</div>
-      <div class="week-strip" id="weekStrip"></div>
+
+      <div class="stack">
+        <button class="mini-pay" id="miniPay" type="button">
+          <span class="mp-body">
+            <span class="k" id="miniPayLabel">Lương kỳ này</span>
+            <span class="v" id="miniPayAmt" style="display:block">—</span>
+            <span class="s" id="miniPayMeta" style="display:block">&nbsp;</span>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </button>
+
+        <section class="card" aria-labelledby="weekH">
+          <div class="sec-title">
+            <h2 id="weekH">Tuần này</h2>
+            <span class="week-total" id="weekTotal">0h00</span>
+          </div>
+          <div class="week-strip" id="weekStrip"></div>
+          <div class="sec-meta" id="weekMeta" style="margin-top:10px">&nbsp;</div>
+        </section>
+      </div>
     </section>
 
-    <section class="a-month" aria-labelledby="monthLabel">
-      <div class="card pay" aria-labelledby="payTitle">
-        <div class="pay-head">
-          <div>
-            <div class="card-tag">Kỳ lương</div>
-            <h2 id="payTitle">Nhận lương</h2>
-            <div class="sec-meta" id="payRange">&nbsp;</div>
-          </div>
-          <div class="pay-nav">
-            <button class="nav-btn" id="prevP" type="button" aria-label="Kỳ lương trước">‹</button>
-            <button class="btn" id="thisP" type="button">Kỳ này</button>
-            <button class="nav-btn" id="nextP" type="button" aria-label="Kỳ lương sau">›</button>
-          </div>
-        </div>
-        <div class="pay-body">
-          <div class="pay-amount">
-            <div class="k">Lương kỳ này</div>
-            <div class="v mono" id="payAmount">—</div>
-            <div class="s" id="payFormula">&nbsp;</div>
-          </div>
-          <dl class="pay-facts" id="payFacts"></dl>
-        </div>
-        <span class="pill t-idle" id="payStatus"><span class="dot"></span><span id="payStatusText">Đang tải</span></span>
-      </div>
-
+    <!-- ===== Lịch ===== -->
+    <section id="tab-calendar" role="tabpanel" data-panel="calendar" hidden>
       <div class="month-head">
         <h2 id="monthLabel">Tháng</h2>
         <button class="nav-btn" id="prevM" type="button" aria-label="Tháng trước">‹</button>
-        <button class="btn" id="thisM" type="button">Tháng này</button>
+        <button class="btn sm" id="thisM" type="button">Tháng này</button>
         <button class="nav-btn" id="nextM" type="button" aria-label="Tháng sau">›</button>
       </div>
       <div class="stats" id="stats"></div>
-      <div class="cal">
+      <div class="card cal">
         <div class="cal-wd"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div></div>
         <div class="cal-grid" id="calGrid"></div>
       </div>
@@ -349,15 +402,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
 
       <div class="table-head">
         <h3>Chi tiết tháng</h3>
-        <div class="export">
-          <select id="exScope" aria-label="Phạm vi xuất file">
-            <option value="period">Kỳ lương đang xem</option>
-            <option value="month">Tháng đang xem</option>
-            <option value="all">Toàn bộ dữ liệu</option>
-          </select>
-          <button class="btn" id="exXlsx" type="button">Xuất Excel</button>
-          <button class="btn" id="exCsv" type="button">CSV</button>
-        </div>
+        <span class="sec-meta">Bấm ngày hoặc số tiền để sửa</span>
       </div>
       <div class="table-wrap">
         <table>
@@ -365,63 +410,115 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
           <tbody id="tbody"></tbody>
         </table>
       </div>
+      <div class="export">
+        <select id="exScope" aria-label="Phạm vi xuất file">
+          <option value="period">Kỳ lương đang xem</option>
+          <option value="month">Tháng đang xem</option>
+          <option value="all">Toàn bộ dữ liệu</option>
+        </select>
+        <button class="btn primary" id="exXlsx" type="button">Xuất Excel</button>
+        <button class="btn" id="exCsv" type="button">CSV</button>
+      </div>
     </section>
 
-    <details class="card settings a-settings" id="settingsBox">
-      <summary>Cài đặt ca làm & lương</summary>
-      <div class="form">
-        <div class="field"><span>Các ca làm cố định</span>
-          <div id="shiftList"></div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-            <button class="btn" id="addShift" type="button">+ Thêm ca</button>
-            <span class="sh-err" id="shiftErr" hidden></span>
+    <!-- ===== Lương ===== -->
+    <section id="tab-pay" role="tabpanel" data-panel="pay" hidden>
+      <div class="card pay" aria-labelledby="payTitle">
+        <div class="pay-head">
+          <div>
+            <div class="card-tag">Kỳ lương</div>
+            <h2 id="payTitle">Nhận lương</h2>
+            <div class="sec-meta" id="payRange">&nbsp;</div>
           </div>
-          <small>Đổi giờ ca chỉ áp dụng cho các lần chấm sau, ngày đã chấm giữ nguyên giờ cũ.</small>
-        </div>
-        <div class="two">
-          <label class="field"><span>Lương giờ chính thức (₫)</span>
-            <input type="number" id="setRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 26000">
-          </label>
-          <label class="field"><span>Lương giờ làm thêm (₫)</span>
-            <input type="number" id="setOtRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 26000">
-          </label>
-        </div>
-        <small class="hint" style="margin:0">Làm thêm là giờ làm sau khi hết ca. Nhập số giờ làm thêm ở từng ngày (bấm vào ngày trên lịch).</small>
-        <div class="two">
-          <label class="field"><span>Thử việc: số ngày làm đầu</span>
-            <input type="number" id="setProbDays" min="0" max="60" step="1" inputmode="numeric">
-          </label>
-          <label class="field"><span>Lương giờ thử việc (₫)</span>
-            <input type="number" id="setProbRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 25000">
-          </label>
-        </div>
-        <div class="two">
-          <label class="field"><span>Ngày bắt đầu làm</span>
-            <input type="date" id="setStart">
-          </label>
-          <label class="field"><span>Nhận lương ngày</span>
-            <input type="number" id="setPayDay" min="1" max="28" step="1" inputmode="numeric">
-          </label>
-        </div>
-        <label class="field"><span>Nhận lương lần đầu</span>
-          <input type="date" id="setFirstPay">
-          <small>Kỳ đầu tính công từ ngày bắt đầu làm tới hết ngày trước lần nhận lương đầu. Các kỳ sau tính từ ngày nhận lương tới hết ngày trước kỳ lương tháng sau.</small>
-        </label>
-        <div class="field"><span>Sao lưu dữ liệu</span>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" id="backupBtn" type="button">Tải file sao lưu</button>
-            <label class="btn" for="importFile">Nhập từ file sao lưu</label>
-            <input type="file" id="importFile" accept=".json,application/json" hidden>
+          <div class="pay-nav">
+            <button class="nav-btn" id="prevP" type="button" aria-label="Kỳ lương trước">‹</button>
+            <button class="btn sm" id="thisP" type="button">Kỳ này</button>
+            <button class="nav-btn" id="nextP" type="button" aria-label="Kỳ lương sau">›</button>
           </div>
-          <small>File sao lưu (.json) chứa toàn bộ ngày làm và cài đặt. Dùng để giữ một bản dự phòng, hoặc chuyển dữ liệu giữa bản claude.ai và bản GitHub.</small>
-          <div class="confirm" id="importConfirm" hidden>
-            <p id="importMsg"></p>
-            <button class="btn" id="importNo" type="button">Huỷ</button>
-            <button class="btn primary" id="importYes" type="button">Nhập</button>
+        </div>
+        <div class="pay-amount">
+          <div class="k">Tổng lương kỳ</div>
+          <div class="v mono" id="payAmount">—</div>
+          <div class="s" id="payFormula">&nbsp;</div>
+        </div>
+        <dl class="pay-facts" id="payFacts"></dl>
+        <span class="pill t-idle" id="payStatus"><span class="dot"></span><span id="payStatusText">Đang tải</span></span>
+      </div>
+    </section>
+
+    <!-- ===== Cài đặt ===== -->
+    <section class="stack" id="tab-settings" role="tabpanel" data-panel="settings" hidden>
+      <div class="card set-card" id="account" hidden>
+        <h2>Tài khoản</h2>
+        <div class="account-row"><span id="accountEmail"></span><button type="button" class="btn sm" id="signOutBtn">Đăng xuất</button></div>
+      </div>
+
+      <div class="card set-card" id="settingsBox">
+        <h2>Ca làm cố định</h2>
+        <p>Các ca này hiện thành nút bấm ở tab Hôm nay. Đổi giờ ca chỉ áp dụng cho các lần chấm sau.</p>
+        <div id="shiftList"></div>
+        <div class="row-actions">
+          <button class="btn" id="addShift" type="button">+ Thêm ca</button>
+          <span class="sh-err" id="shiftErr" hidden></span>
+        </div>
+      </div>
+
+      <div class="card set-card">
+        <h2>Lương</h2>
+        <p>Làm thêm là giờ làm sau khi hết ca; nhập số giờ ở từng ngày (bấm vào ngày trên lịch).</p>
+        <div class="form">
+          <div class="two">
+            <label class="field"><span>Lương giờ chính thức (₫)</span>
+              <input type="number" id="setRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 26000">
+            </label>
+            <label class="field"><span>Lương giờ làm thêm (₫)</span>
+              <input type="number" id="setOtRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 26000">
+            </label>
+          </div>
+          <div class="two">
+            <label class="field"><span>Thử việc: số ngày đầu</span>
+              <input type="number" id="setProbDays" min="0" max="60" step="1" inputmode="numeric">
+            </label>
+            <label class="field"><span>Lương giờ thử việc (₫)</span>
+              <input type="number" id="setProbRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 25000">
+            </label>
           </div>
         </div>
       </div>
-    </details>
+
+      <div class="card set-card">
+        <h2>Kỳ lương</h2>
+        <p>Kỳ đầu tính công từ ngày bắt đầu làm tới hết ngày trước lần nhận lương đầu. Các kỳ sau tính từ ngày nhận lương tới hết ngày trước kỳ lương tháng sau.</p>
+        <div class="form">
+          <div class="two">
+            <label class="field"><span>Ngày bắt đầu làm</span>
+              <input type="date" id="setStart">
+            </label>
+            <label class="field"><span>Nhận lương ngày</span>
+              <input type="number" id="setPayDay" min="1" max="28" step="1" inputmode="numeric">
+            </label>
+          </div>
+          <label class="field"><span>Nhận lương lần đầu</span>
+            <input type="date" id="setFirstPay">
+          </label>
+        </div>
+      </div>
+
+      <div class="card set-card">
+        <h2>Sao lưu dữ liệu</h2>
+        <p>File sao lưu (.json) chứa toàn bộ ngày làm và cài đặt. Dùng để giữ bản dự phòng hoặc chuyển dữ liệu sang chỗ khác.</p>
+        <div class="row-actions">
+          <button class="btn" id="backupBtn" type="button">Tải file sao lưu</button>
+          <label class="btn" for="importFile">Nhập từ file sao lưu</label>
+          <input type="file" id="importFile" accept=".json,application/json" hidden>
+        </div>
+        <div class="confirm" id="importConfirm" hidden>
+          <p id="importMsg"></p>
+          <button class="btn" id="importNo" type="button">Huỷ</button>
+          <button class="btn primary" id="importYes" type="button">Nhập</button>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -439,7 +536,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       <div class="ed-quick" id="edQuick"></div>
       <div id="edSessions"></div>
       <p class="hint">Có thể sửa giờ nếu hôm đó làm khác giờ ca. Giờ ra nhỏ hơn giờ vào được tính là ca qua đêm.</p>
-      <button class="btn" id="edAdd" type="button">+ Thêm ca</button>
+      <button class="btn sm" id="edAdd" type="button">+ Thêm ca</button>
     </div>
     <div id="edOff" hidden>
       <label class="field"><span>Loại nghỉ</span>
@@ -471,7 +568,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       <small class="hint" id="edPayHint"></small>
     </details>
     <label class="field" style="margin-top:14px"><span>Ghi chú</span>
-      <textarea id="edNote" rows="2" placeholder="Ví dụ: làm ở nhà, đi công tác…"></textarea>
+      <textarea id="edNote" rows="2" placeholder="Ví dụ: đổi ca, về sớm…"></textarea>
     </label>
     <p class="ed-error" id="edError" hidden></p>
     <div class="sheet-foot">
@@ -689,7 +786,9 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     const d = S.days.get(k);
     if (!d) return { cls: "", val: "" };
     if (d.status === "off") return { cls: "t-" + (d.offType || "khac"), val: OFF_SHORT[d.offType] || "Nghỉ" };
-    return { cls: "t-work" + (isOpen(d) ? " is-open" : ""), val: fmtDur(totalMin(k, d)) };
+    // Ô lịch hẹp trên điện thoại: "8h" thay cho "8h00"
+    const m = Math.floor(totalMin(k, d));
+    return { cls: "t-work" + (isOpen(d) ? " is-open" : ""), val: m % 60 ? fmtDur(m) : `${m / 60}h` };
   }
   const sesText = s => `${s.in}–${s.out || "…"}`;
 
@@ -711,7 +810,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
 
   function renderToday() {
     const n = new Date(), tk = keyOf(n), day = S.days.get(tk), openK = findOpen();
-    $("#todayLabel").textContent = fmtLong(n);
+    $("#todayLabel").textContent = `${WD_LONG[n.getDay()]}, ${n.getDate()}/${n.getMonth() + 1}/${n.getFullYear()}`;
     renderClock();
     const pill = $("#statePill"), stateText = $("#stateText"), label = $("#todayLabel2");
     let cls = "t-idle", txt, sub, live = false;
@@ -805,6 +904,17 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       : `<tr class="empty-row"><td colspan="6">${S.loaded ? "Tháng này chưa có dữ liệu. Chọn ca ở thẻ hôm nay, hoặc bấm một ngày trên lịch để chấm." : "Đang tải dữ liệu…"}</td></tr>`;
   }
 
+  // Thẻ nhỏ ở tab Hôm nay: luôn là kỳ lương hiện tại
+  function renderMiniPay() {
+    const cm = currentPayMonth(), p = periodOf(cm.y, cm.m), tk = todayKey();
+    const sum = summarize(rangeKeys(p.startK, p.endK));
+    $("#miniPayLabel").textContent = `Lương kỳ này · nhận ${fmtDM(p.payK)}`;
+    $("#miniPayAmt").textContent = S.settings.rate ? fmtMoney(sum.pay) : "Chưa nhập lương";
+    const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
+    const when = left <= 0 ? "Đã tới ngày lương" : left === 1 ? "Ngày mai nhận lương" : `Còn ${left} ngày tới ngày lương`;
+    $("#miniPayMeta").textContent = `${when} · ${fmtDur(sum.work)} · ${sum.workDays} ngày làm`;
+  }
+
   function renderPay() {
     if (!S.payView || periodOf(S.payView.y, S.payView.m).beforeStart) S.payView = currentPayMonth();
     const { y, m } = S.payView, p = periodOf(y, m), tk = todayKey(), st = S.settings;
@@ -823,7 +933,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     } else {
       $("#payAmount").textContent = "—";
       $("#payFormula").innerHTML = `<button type="button" class="linkish" id="goSettings">Nhập lương theo giờ</button> để tính tiền`;
-      $("#goSettings").onclick = () => { const b = $("#settingsBox"); b.open = true; b.scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => $("#setRate").focus(), 300); };
+      $("#goSettings").onclick = () => { showTab("settings"); setTimeout(() => $("#setRate").focus(), 100); };
     }
     $("#payFacts").innerHTML = `
       <div><dt>Tổng giờ làm</dt><dd>${fmtDur(sum.work)}</dd></div>
@@ -880,7 +990,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   }
   function showShiftErr(msg) { const e = $("#shiftErr"); e.textContent = msg; e.hidden = !msg; }
 
-  function renderAll() { probCache = null; renderSync(); renderToday(); renderWeek(); renderPay(); renderMonth(); renderSettingsInputs(); }
+  function renderAll() { probCache = null; renderSync(); renderToday(); renderWeek(); renderMiniPay(); renderPay(); renderMonth(); renderSettingsInputs(); }
 
   // ---------- messages ----------
   let toastT = null;
@@ -1189,9 +1299,28 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     if (b) toggleShift(todayKey(), b.dataset.shift);
   });
   $("#goShifts").addEventListener("click", () => {
-    const box = $("#settingsBox"); box.open = true;
-    box.scrollIntoView({ behavior: "smooth", block: "start" });
+    showTab("settings");
+    $("#settingsBox").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
+  // ---------- tab ----------
+  const TABS = ["today", "calendar", "pay", "settings"];
+  function showTab(name, remember = true) {
+    if (!TABS.includes(name)) name = "today";
+    document.querySelectorAll("[data-panel]").forEach(p => { p.hidden = p.dataset.panel !== name; });
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.tab === name));
+    if (remember) { try { localStorage.setItem("shiftbook.tab", name); } catch (_) {} }
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelector(".tabbar").addEventListener("click", e => {
+    const t = e.target.closest(".tab"); if (t) showTab(t.dataset.tab);
+  });
+  $("#miniPay").addEventListener("click", () => { S.payView = currentPayMonth(); renderPay(); showTab("pay"); });
+  {
+    let start = location.hash.slice(1);
+    if (!TABS.includes(start)) { try { start = localStorage.getItem("shiftbook.tab") || "today"; } catch (_) { start = "today"; } }
+    showTab(start, false);
+  }
   $("#edQuick").addEventListener("click", e => {
     const b = e.target.closest("[data-qshift]"); if (!b) return;
     const sh = S.settings.shifts.find(x => x.id === b.dataset.qshift); if (!sh) return;
