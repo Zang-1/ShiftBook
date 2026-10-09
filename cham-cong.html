@@ -501,7 +501,14 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   const ON_CLAUDE = !!window.claude;
   // Cấu hình web app trong Firebase Console → Project settings → Your apps. Các giá trị này công khai được;
   // dữ liệu được bảo vệ bằng Firestore rules (mỗi người chỉ đọc/ghi users/<uid của mình>).
-  const FIREBASE_CONFIG = { apiKey: "", authDomain: "", projectId: "", appId: "" };
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDD3m7HRF-DutkqVl03s6H8s7HN9WuT_UM",
+    authDomain: "shiftbook-526ed.firebaseapp.com",
+    projectId: "shiftbook-526ed",
+    storageBucket: "shiftbook-526ed.firebasestorage.app",
+    messagingSenderId: "389031387176",
+    appId: "1:389031387176:web:02d4f6e00c080ad856151d",
+  };
   const FIREBASE_VERSION = "10.12.2";
   const OFF = { phep: "Nghỉ phép", om: "Nghỉ ốm", le: "Nghỉ lễ", lich: "Ngày nghỉ", khac: "Nghỉ khác" };
   const OFF_SHORT = { phep: "Phép", om: "Ốm", le: "Lễ", lich: "Off", khac: "Nghỉ" };
