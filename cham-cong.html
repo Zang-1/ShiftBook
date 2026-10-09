@@ -395,10 +395,6 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
             <input type="number" id="setProbRate" min="0" step="1000" inputmode="numeric" placeholder="Ví dụ 25000">
           </label>
         </div>
-        <label class="check"><input type="checkbox" id="setPaid"><span>Ngày nghỉ phép và nghỉ lễ vẫn được trả lương</span></label>
-        <label class="field"><span>Số giờ trả lương cho một ngày nghỉ phép / lễ</span>
-          <input type="number" id="setStd" min="0.5" max="24" step="0.5">
-        </label>
         <div class="two">
           <label class="field"><span>Ngày bắt đầu làm</span>
             <input type="date" id="setStart">
@@ -623,7 +619,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     if (!d) return r;
     r.bonus = num(d.bonus, 0);
     if (d.status === "off") {
-      r.pay = (st.paidLeave && PAID_OFF.has(d.offType) ? st.stdHours * st.rate : 0) + r.bonus;
+      r.pay = r.bonus; // ngày nghỉ không có lương; cần thì nhập tay ở "Lương ngày này"
     } else {
       r.prob = probSet().has(k);
       r.base = num(d.rateOverride, r.prob && st.probRate ? st.probRate : st.rate);
@@ -639,7 +635,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
   const isOpen = d => d && d.status === "work" && d.sessions && d.sessions.length && !d.sessions[d.sessions.length - 1].out;
   function findOpen() { let best = null; for (const [k, d] of S.days) if (isOpen(d) && (!best || k > best)) best = k; return best; }
   function summarize(keys) {
-    const r = { work: 0, ot: 0, pay: 0, workDays: 0, offDays: 0, off: {}, parts: {}, otPayMin: 0, bonus: 0, manualDays: 0, paidOff: 0, probDays: 0 };
+    const r = { work: 0, ot: 0, pay: 0, workDays: 0, offDays: 0, off: {}, parts: {}, otPayMin: 0, bonus: 0, manualDays: 0, probDays: 0 };
     for (const k of keys) {
       const d = S.days.get(k); if (!d) continue;
       const c = dayCalc(k, d);
@@ -654,7 +650,7 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       if (d.status === "work") {
         if (c.regMin) r.parts[c.base] = (r.parts[c.base] || 0) + c.regMin;
         r.otPayMin += c.extraMin;
-      } else if (S.settings.paidLeave && PAID_OFF.has(d.offType)) r.paidOff++;
+      }
     }
     return r;
   }
@@ -819,7 +815,6 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
       const bits = Object.entries(sum.parts).sort((a, b) => a[0] - b[0]).map(([r, mins]) =>
         `${fmtDur(mins)} × ${fmtMoney(+r)}${st.probDays && +r === st.probRate && st.probRate !== st.rate ? " (thử việc)" : ""}`);
       if (sum.otPayMin >= 1) bits.push(`${fmtDur(sum.otPayMin)} làm thêm × ${fmtMoney(st.otRate)}`);
-      if (sum.paidOff) bits.push(`${sum.paidOff} ngày nghỉ có lương`);
       if (sum.bonus) bits.push(`thưởng/trừ ${sum.bonus > 0 ? "+" : "−"}${fmtMoney(Math.abs(sum.bonus))}`);
       if (sum.manualDays) bits.push(`${sum.manualDays} ngày nhập tay tổng lương`);
       let f = bits.join(" + ") || "Chưa có giờ làm trong kỳ này";
@@ -847,19 +842,17 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     $("#prevP").disabled = periodOf(y, m - 1).beforeStart;
   }
 
-  const SETTING_IDS = ["#setRate", "#setOtRate", "#setProbDays", "#setProbRate", "#setStd", "#setPaid", "#setStart", "#setPayDay", "#setFirstPay"];
+  const SETTING_IDS = ["#setRate", "#setOtRate", "#setProbDays", "#setProbRate", "#setStart", "#setPayDay", "#setFirstPay"];
   function renderSettingsInputs() {
     const st = S.settings, a = document.activeElement;
     const set = (id, v) => { const el = $(id); if (el !== a) el.value = v; };
     set("#setRate", st.rate || "");
-    set("#setStd", st.stdHours);
     set("#setOtRate", st.otRate || "");
     set("#setProbDays", st.probDays);
     set("#setProbRate", st.probRate || "");
     set("#setStart", st.startDate);
     set("#setPayDay", st.payDay);
     set("#setFirstPay", st.firstPay);
-    if ($("#setPaid") !== a) $("#setPaid").checked = st.paidLeave;
     SETTING_IDS.forEach(id => $(id).disabled = !canWrite());
     renderShiftList(false);
   }
@@ -1252,11 +1245,11 @@ td.note{color:var(--muted);max-width:260px;overflow-wrap:anywhere}
     showShiftErr("");
     const v = normSettings({
       rate: Number($("#setRate").value) || 0,
-      stdHours: Number($("#setStd").value) || 8,
+      stdHours: S.settings.stdHours,
       otRate: Number($("#setOtRate").value) || 0,
       probDays: Number($("#setProbDays").value) || 0,
       probRate: Number($("#setProbRate").value) || 0,
-      paidLeave: $("#setPaid").checked,
+      paidLeave: S.settings.paidLeave,
       shifts,
       payDay: Number($("#setPayDay").value) || 10,
       startDate: $("#setStart").value,
