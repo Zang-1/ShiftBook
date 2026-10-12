@@ -178,7 +178,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .wd{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;border-radius:12px;border:2px solid transparent;background:var(--cs,var(--surface-2));color:var(--ink);min-width:0}
 .wd .w1{font-size:11px;font-weight:700;color:var(--muted)}
 .wd .w2{font-size:15px;font-weight:800}
-.wd .w3{font-family:var(--f-mono);font-size:10.5px;font-weight:700;color:var(--c,var(--muted));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.wd .w3{font-family:var(--f-mono);font-size:10px;font-weight:700;line-height:1.2;text-align:center;color:var(--c,var(--muted));max-width:100%;overflow-wrap:anywhere}
 .wd.today{border-color:var(--accent)}
 .day.is-open .dv::before,.wd.is-open .w3::before{content:"● ";animation:pulse 1.6s ease-in-out infinite}
 .stamps{display:none}
@@ -219,7 +219,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 @media (min-width:640px){.day{min-height:76px;padding:8px 9px}}
 .day:hover{border-color:color-mix(in srgb,var(--accent) 60%,transparent)}
 .day .dn{font-size:13.5px;font-weight:700}
-.day .dv{font-family:var(--f-mono);font-size:11px;font-weight:800;color:var(--c,var(--muted));max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day .dv{font-family:var(--f-mono);font-size:10.5px;font-weight:800;line-height:1.2;letter-spacing:-.02em;color:var(--c,var(--muted));max-width:100%;overflow-wrap:anywhere}
 @media (min-width:640px){.day .dv{font-size:13px}}
 .day.future .dn{color:var(--muted);font-weight:500}
 .day.today{border-color:var(--accent)}
@@ -829,10 +829,21 @@ label.btn{cursor:pointer}
     const d = S.days.get(k);
     if (!d) return { cls: "", val: "" };
     if (d.status === "off") return { cls: "t-" + (d.offType || "khac"), val: OFF_SHORT[d.offType] || "Nghỉ" };
-    // Ô lịch hẹp trên điện thoại: "8h" thay cho "8h00"
-    const m = Math.floor(totalMin(k, d));
-    return { cls: "t-work" + (isOpen(d) ? " is-open" : ""), val: m % 60 ? fmtDur(m) : `${m / 60}h` };
+    // Ô lịch hiện ca theo kiểu viết tay: "16g-0g", "9g30-18g"; nhiều ca thì thêm "+1"
+    const ss = d.sessions || [];
+    const cls = "t-work" + (isOpen(d) ? " is-open" : "");
+    if (!ss.length) { const m = Math.floor(totalMin(k, d)); return { cls, val: m ? fmtDur(m) : "" }; }
+    return { cls, val: shiftLabel(ss[0]) + (ss.length > 1 ? ` +${ss.length - 1}` : "") };
   }
+  const gTime = t => {
+    if (!t) return "…";
+    const [h, m] = t.split(":").map(Number);
+    if (h === 23 && m === 59) return "0g";
+    return `${h}g${m ? pad(m) : ""}`;
+  };
+  const shiftLabel = s => `${gTime(s.in)}-${gTime(s.out)}`;
+  // Cho phép xuống dòng sau dấu gạch khi ô lịch hẹp
+  const cellHtml = v => esc(v).replace("-", "-<wbr>");
   const sesText = s => `${s.in}–${s.out || "…"}`;
 
   // ---------- rendering ----------
@@ -908,7 +919,7 @@ label.btn{cursor:pointer}
     $("#weekStrip").innerHTML = keys.map(k => {
       const d = dateOf(k), c = cellInfo(k);
       return `<button type="button" class="wd ${c.cls}${k === tk ? " today" : ""}" data-key="${k}" aria-label="${esc(fmtLong(d))}">
-        <span class="w1">${WD[d.getDay()]}</span><span class="w2">${d.getDate()}</span><span class="w3">${c.val ? esc(c.val) : "—"}</span></button>`;
+        <span class="w1">${WD[d.getDay()]}</span><span class="w2">${d.getDate()}</span><span class="w3">${c.val ? cellHtml(c.val) : "—"}</span></button>`;
     }).join("");
   }
 
@@ -928,7 +939,7 @@ label.btn{cursor:pointer}
     for (const k of keys) {
       const d = S.days.get(k), c = cellInfo(k), dt = dateOf(k);
       html += `<button type="button" class="day ${c.cls}${k === tk ? " today" : ""}${k > tk ? " future" : ""}" data-key="${k}" aria-label="${esc(fmtLong(dt))}${c.val ? ", " + esc(c.val) : ""}">
-        <span class="dn">${dt.getDate()}</span><span class="dv">${esc(c.val)}</span>${d && d.note ? '<span class="note-mark" title="Có ghi chú"></span>' : ""}</button>`;
+        <span class="dn">${dt.getDate()}</span><span class="dv">${cellHtml(c.val)}</span>${d && d.note ? '<span class="note-mark" title="Có ghi chú"></span>' : ""}</button>`;
     }
     $("#calGrid").innerHTML = html;
 
