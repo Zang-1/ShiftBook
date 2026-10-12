@@ -72,7 +72,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .t-phep{--c:var(--phep);--cs:var(--phep-soft)}
 .t-om{--c:var(--om);--cs:var(--om-soft)}
 .t-le{--c:var(--le);--cs:var(--le-soft)}
-.t-lich,.t-khac{--c:var(--lich);--cs:var(--lich-soft)}
+.t-lich,.t-khac{--c:var(--s6);--cs:var(--s6-soft)}
 .t-warn{--c:var(--warn);--cs:var(--warn-soft)}
 .t-idle{--c:var(--muted);--cs:var(--surface-2)}
 .t-accent{--c:var(--accent);--cs:var(--accent-soft)}
@@ -863,7 +863,7 @@ label.btn{cursor:pointer}
     if (d.status === "off") return { cls: "t-" + (d.offType || "khac"), val: OFF_SHORT[d.offType] || "Nghỉ" };
     // Ô lịch hiện ca theo kiểu viết tay: "16g-0g", "9g30-18g"; nhiều ca thì thêm "+1"
     const ss = d.sessions || [];
-    const cls = (ss.length ? "sc-" + shiftTone(ss[0]) : "t-work") + (isOpen(d) ? " is-open" : "");
+    const cls = "t-work" + (isOpen(d) ? " is-open" : "");
     if (!ss.length) { const m = Math.floor(totalMin(k, d)); return { cls, val: m ? fmtDur(m) : "" }; }
     return { cls, val: shiftLabel(ss[0]) + (ss.length > 1 ? ` +${ss.length - 1}` : "") };
   }
@@ -972,7 +972,7 @@ label.btn{cursor:pointer}
     $("#stats").innerHTML = `
       <div class="stat tone-blue"><div class="k">Tổng giờ trong tháng</div><div class="v">${fmtDur(sum.work)}</div></div>
       <div class="stat tone-green"><div class="k">Ngày đi làm</div><div class="v">${sum.workDays}</div></div>
-      <div class="stat tone-grey"><div class="k">Ngày nghỉ</div><div class="v">${sum.offDays}</div><div class="s">${offParts.join(" · ") || "&nbsp;"}</div></div>
+      <div class="stat tone-pink"><div class="k">Ngày nghỉ</div><div class="v">${sum.offDays}</div><div class="s">${offParts.join(" · ") || "&nbsp;"}</div></div>
       <div class="stat tone-orange"><div class="k">Làm thêm</div><div class="v">${fmtDur(sum.ot)}</div></div>`;
 
     const lead = (new Date(y, m, 1).getDay() + 6) % 7;
@@ -983,7 +983,7 @@ label.btn{cursor:pointer}
         <span class="dn">${dt.getDate()}</span><span class="dv">${cellHtml(c.val)}</span>${d && d.note ? '<span class="note-mark" title="Có ghi chú"></span>' : ""}</button>`;
     }
     $("#calGrid").innerHTML = html;
-    $("#shiftLegend").innerHTML = S.settings.shifts.map(sh => `<span class="sc-${shiftTone(sh)}"><i></i>${esc(sh.name)} ${esc(shiftLabel(sh))}</span>`).join("");
+    $("#shiftLegend").innerHTML = `<span class="t-work"><i></i>Đi làm</span>`;
 
     const rows = keys.filter(k => S.days.has(k)).map(k => {
       const d = S.days.get(k), dt = dateOf(k);
@@ -994,7 +994,7 @@ label.btn{cursor:pointer}
         const t = d.offType || "khac";
         return `<tr><td>${dateCell}</td><td><span class="chip t-${t}">${esc(OFF[t] || "Nghỉ")}</span></td><td class="num">—</td><td class="num">—</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
       }
-      return `<tr><td>${dateCell}</td><td class="ses"><span class="ses-chips">${(d.sessions || []).map(x => `<span class="chip sc-${shiftTone(x)}">${esc(shiftLabel(x))}</span>`).join("") || "—"}</span></td><td class="num">${fmtDur(c.regMin)}</td><td class="num">${c.extraMin >= 1 ? fmtDur(c.extraMin) : "—"}</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
+      return `<tr><td>${dateCell}</td><td class="ses"><span class="ses-chips">${(d.sessions || []).map(x => `<span class="chip t-work">${esc(shiftLabel(x))}</span>`).join("") || "—"}</span></td><td class="num">${fmtDur(c.regMin)}</td><td class="num">${c.extraMin >= 1 ? fmtDur(c.extraMin) : "—"}</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
     });
     $("#tbody").innerHTML = rows.length ? rows.join("")
       : `<tr class="empty-row"><td colspan="6">${S.loaded ? "Tháng này chưa có dữ liệu. Chọn ca ở thẻ hôm nay, hoặc bấm một ngày trên lịch để chấm." : "Đang tải dữ liệu…"}</td></tr>`;
@@ -1034,7 +1034,7 @@ label.btn{cursor:pointer}
     $("#payFacts").innerHTML = `
       <div class="tone-blue"><dt>Tổng giờ làm</dt><dd>${fmtDur(sum.work)}</dd></div>
       <div class="tone-green"><dt>Ngày đi làm</dt><dd>${sum.workDays}</dd></div>
-      <div class="tone-grey"><dt>Ngày nghỉ</dt><dd>${sum.offDays}</dd></div>
+      <div class="tone-pink"><dt>Ngày nghỉ</dt><dd>${sum.offDays}</dd></div>
       <div class="tone-orange"><dt>Làm thêm</dt><dd>${fmtDur(sum.ot)}</dd></div>`;
     let cls = "t-idle", txt = "Tháng sắp tới", live = false;
     const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
