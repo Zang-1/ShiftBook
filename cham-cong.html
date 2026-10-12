@@ -16,6 +16,10 @@
   --warn:#AD6800; --warn-soft:#FCEED6;
   --danger:#D23B2C;
   --hero:#121B2B; --hero-ink:#FFFFFF; --hero-muted:#A3B0C3; --hero-line:#26324A;
+  /* bảng màu ca làm & các ô thống kê */
+  --s1:#B87A00; --s1-soft:#FFF0C7; --s2:#1A73C8; --s2-soft:#DCEBFF; --s3:#DA5216; --s3-soft:#FFE4D6;
+  --s4:#6648D6; --s4-soft:#EAE4FF; --s5:#0B8F6E; --s5-soft:#D3F2E7; --s6:#BE2F82; --s6-soft:#FCE0EF;
+  --on-shift:#FFFFFF;
   --backdrop:rgba(10,15,25,.5);
   --shadow:0 1px 2px rgba(15,23,40,.05),0 8px 24px rgba(15,23,40,.07);
   --shadow-lg:0 2px 4px rgba(15,23,40,.06),0 18px 40px rgba(15,23,40,.14);
@@ -30,6 +34,9 @@
   --phep:#A992FF; --phep-soft:#2A2449; --om:#F4A63E; --om-soft:#3A2B13; --le:#FF7D6D; --le-soft:#3E1F1B;
   --lich:#9AA6B7; --lich-soft:#212B39; --warn:#F4A63E; --warn-soft:#3A2B13; --danger:#FF7D6D;
   --hero:#18233A; --hero-ink:#FFFFFF; --hero-muted:#9EAECA; --hero-line:#2A3955;
+  --s1:#FFC94D; --s1-soft:#3A2D0B; --s2:#62B3FF; --s2-soft:#0F2741; --s3:#FF8B57; --s3-soft:#3D1F12;
+  --s4:#AC97FF; --s4-soft:#271F4A; --s5:#34D6A2; --s5-soft:#0C3327; --s6:#FF7DC8; --s6-soft:#3E1631;
+  --on-shift:#0B0F17;
   --backdrop:rgba(0,0,0,.62);
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
   --shadow-lg:0 2px 4px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.45);
@@ -42,6 +49,9 @@
   --phep:#A992FF; --phep-soft:#2A2449; --om:#F4A63E; --om-soft:#3A2B13; --le:#FF7D6D; --le-soft:#3E1F1B;
   --lich:#9AA6B7; --lich-soft:#212B39; --warn:#F4A63E; --warn-soft:#3A2B13; --danger:#FF7D6D;
   --hero:#18233A; --hero-ink:#FFFFFF; --hero-muted:#9EAECA; --hero-line:#2A3955;
+  --s1:#FFC94D; --s1-soft:#3A2D0B; --s2:#62B3FF; --s2-soft:#0F2741; --s3:#FF8B57; --s3-soft:#3D1F12;
+  --s4:#AC97FF; --s4-soft:#271F4A; --s5:#34D6A2; --s5-soft:#0C3327; --s6:#FF7DC8; --s6-soft:#3E1631;
+  --on-shift:#0B0F17;
   --backdrop:rgba(0,0,0,.62);
   --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.28);
   --shadow-lg:0 2px 4px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.45);
@@ -66,6 +76,13 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .t-warn{--c:var(--warn);--cs:var(--warn-soft)}
 .t-idle{--c:var(--muted);--cs:var(--surface-2)}
 .t-accent{--c:var(--accent);--cs:var(--accent-soft)}
+.sc-1,.tone-amber{--c:var(--s1);--cs:var(--s1-soft)}
+.sc-2,.tone-blue{--c:var(--s2);--cs:var(--s2-soft)}
+.sc-3,.tone-orange{--c:var(--s3);--cs:var(--s3-soft)}
+.sc-4,.tone-violet{--c:var(--s4);--cs:var(--s4-soft)}
+.sc-5,.tone-green{--c:var(--s5);--cs:var(--s5-soft)}
+.sc-6,.tone-pink{--c:var(--s6);--cs:var(--s6-soft)}
+.tone-grey{--c:var(--lich);--cs:var(--lich-soft)}
 
 /* khung trang */
 .app{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:14px calc(104px + env(safe-area-inset-bottom,0px))}
@@ -96,7 +113,12 @@ h1,h2,h3{margin:0;text-wrap:balance}
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border:0;border-radius:14px;background:transparent;color:var(--muted);font-size:12px;font-weight:600}
 .tab svg{width:23px;height:23px}
-.tab[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+.tab[data-tab="today"]{--c:var(--s3);--cs:var(--s3-soft)}
+.tab[data-tab="calendar"]{--c:var(--s2);--cs:var(--s2-soft)}
+.tab[data-tab="pay"]{--c:var(--s5);--cs:var(--s5-soft)}
+.tab[data-tab="settings"]{--c:var(--s4);--cs:var(--s4-soft)}
+.tab svg{color:var(--c)}
+.tab[aria-selected="true"]{color:var(--c);background:var(--cs)}
 @media (min-width:900px){
   .tabbar{position:sticky;top:10px;bottom:auto;display:flex;gap:6px;width:max-content;margin:0 0 18px;padding:5px;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
   .tab{flex-direction:row;gap:8px;padding:9px 16px;font-size:14px}
@@ -160,8 +182,12 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .shift-btn .sc{margin-top:6px;font-size:12px;font-weight:700;color:var(--accent)}
 .shift-btn:hover:not(:disabled){border-color:var(--accent)}
 .shift-btn:active:not(:disabled){transform:scale(.97)}
-.shift-btn.on{background:var(--work);border-color:var(--work);color:var(--work-ink);box-shadow:0 6px 18px color-mix(in srgb,var(--work) 35%,transparent)}
-.shift-btn.on .sn,.shift-btn.on .sc{color:var(--work-ink);opacity:.9}
+.shift-btn[class*="sc-"]{background:var(--cs);border-color:color-mix(in srgb,var(--c) 35%,transparent)}
+.shift-btn[class*="sc-"] .st{color:var(--c)}
+.shift-btn[class*="sc-"] .sc{color:var(--c)}
+.shift-btn[class*="sc-"]:hover:not(:disabled){border-color:var(--c)}
+.shift-btn.on{background:var(--c,var(--work));border-color:var(--c,var(--work));color:var(--on-shift);box-shadow:0 6px 18px color-mix(in srgb,var(--c,var(--work)) 40%,transparent)}
+.shift-btn.on .st,.shift-btn.on .sn,.shift-btn.on .sc{color:var(--on-shift);opacity:1}
 .pick-empty{color:var(--muted);font-size:14px;margin:0}
 .punch-actions{display:flex;gap:10px;margin-top:12px}
 
@@ -208,9 +234,9 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .mp-foot i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--work);margin-right:5px;vertical-align:1px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
 @media (min-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.stat{background:var(--surface);border-radius:14px;padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
+.stat{background:var(--cs,var(--surface));border-radius:14px;padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
 .stat .k{font-size:12px;color:var(--muted);font-weight:600}
-.stat .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:21px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+.stat .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:21px;font-weight:800;margin-top:2px;overflow-wrap:anywhere;color:var(--c,var(--ink))}
 .stat .s{font-size:12px;color:var(--muted);margin-top:2px}
 .cal{padding:12px}
 .cal-wd,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
@@ -258,13 +284,19 @@ td.note{color:var(--muted);max-width:240px;overflow-wrap:anywhere}
 .pay-amount .s{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6}
 .pay-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 0}
 @media (min-width:640px){.pay-facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.pay-facts div{min-width:0;background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.pay-facts div{min-width:0;background:var(--cs,var(--surface-2));border-radius:12px;padding:10px 12px}
 .pay-facts dt{font-size:12px;color:var(--muted);font-weight:600}
-.pay-facts dd{margin:2px 0 0;font-family:var(--f-mono);font-weight:800;font-size:18px;font-variant-numeric:tabular-nums}
+.pay-facts dd{margin:2px 0 0;font-family:var(--f-mono);font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;color:var(--c,var(--ink))}
 .pay .pill{margin-top:16px}
 
 /* ===== Tab Cài đặt ===== */
-.set-card h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.set-card{border-top:5px solid var(--c,var(--line))}
+.set-card h2{font-size:17px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.set-card h2::before{content:"";width:12px;height:12px;border-radius:4px;background:var(--c,var(--muted));flex:none}
+.week-card{border-top:5px solid var(--s2)}
+.week-card .week-total{color:var(--s2)}
+.ses-chips{display:flex;flex-wrap:wrap;gap:5px}
+.ses-chips .chip{font-family:var(--f-mono);font-size:12px}
 .set-card > p{color:var(--muted);font-size:13.5px;margin:0 0 14px}
 .form{display:grid;gap:14px}
 .field{display:grid;gap:6px}
@@ -397,7 +429,7 @@ label.btn{cursor:pointer}
           <span class="chev" aria-hidden="true">›</span>
         </button>
 
-        <section class="card" aria-labelledby="weekH">
+        <section class="card week-card" aria-labelledby="weekH">
           <div class="sec-title">
             <h2 id="weekH">Tuần này</h2>
             <span class="week-total" id="weekTotal">0h00</span>
@@ -434,7 +466,7 @@ label.btn{cursor:pointer}
         <div class="cal-grid" id="calGrid"></div>
       </div>
       <div class="legend">
-        <span class="t-work"><i></i>Đi làm</span>
+        <span id="shiftLegend" style="display:contents"></span>
         <span class="t-phep"><i></i>Nghỉ phép</span>
         <span class="t-om"><i></i>Nghỉ ốm</span>
         <span class="t-le"><i></i>Nghỉ lễ</span>
@@ -489,12 +521,12 @@ label.btn{cursor:pointer}
 
     <!-- ===== Cài đặt ===== -->
     <section class="stack" id="tab-settings" role="tabpanel" data-panel="settings" hidden>
-      <div class="card set-card" id="account" hidden>
+      <div class="card set-card tone-grey" id="account" hidden>
         <h2>Tài khoản</h2>
         <div class="account-row"><span id="accountEmail"></span><button type="button" class="btn sm" id="signOutBtn">Đăng xuất</button></div>
       </div>
 
-      <div class="card set-card" id="settingsBox">
+      <div class="card set-card tone-violet" id="settingsBox">
         <h2>Ca làm cố định</h2>
         <p>Các ca này hiện thành nút bấm ở tab Hôm nay. Đổi giờ ca chỉ áp dụng cho các lần chấm sau.</p>
         <div id="shiftList"></div>
@@ -504,7 +536,7 @@ label.btn{cursor:pointer}
         </div>
       </div>
 
-      <div class="card set-card">
+      <div class="card set-card tone-green">
         <h2>Lương</h2>
         <p>Làm thêm là giờ làm sau khi hết ca; nhập số giờ ở từng ngày (bấm vào ngày trên lịch).</p>
         <div class="form">
@@ -527,7 +559,7 @@ label.btn{cursor:pointer}
         </div>
       </div>
 
-      <div class="card set-card">
+      <div class="card set-card tone-blue">
         <h2>Kỳ lương</h2>
         <p>Lương mỗi tháng tính công từ ngày 1 tới hết tháng, nhận vào ngày dưới đây của tháng sau. Ví dụ công tháng 9 nhận ngày 10/10.</p>
         <div class="form">
@@ -542,7 +574,7 @@ label.btn{cursor:pointer}
         </div>
       </div>
 
-      <div class="card set-card">
+      <div class="card set-card tone-amber">
         <h2>Sao lưu dữ liệu</h2>
         <p>File sao lưu (.json) chứa toàn bộ ngày làm và cài đặt. Dùng để giữ bản dự phòng hoặc chuyển dữ liệu sang chỗ khác.</p>
         <div class="row-actions">
@@ -831,7 +863,7 @@ label.btn{cursor:pointer}
     if (d.status === "off") return { cls: "t-" + (d.offType || "khac"), val: OFF_SHORT[d.offType] || "Nghỉ" };
     // Ô lịch hiện ca theo kiểu viết tay: "16g-0g", "9g30-18g"; nhiều ca thì thêm "+1"
     const ss = d.sessions || [];
-    const cls = "t-work" + (isOpen(d) ? " is-open" : "");
+    const cls = (ss.length ? "sc-" + shiftTone(ss[0]) : "t-work") + (isOpen(d) ? " is-open" : "");
     if (!ss.length) { const m = Math.floor(totalMin(k, d)); return { cls, val: m ? fmtDur(m) : "" }; }
     return { cls, val: shiftLabel(ss[0]) + (ss.length > 1 ? ` +${ss.length - 1}` : "") };
   }
@@ -842,6 +874,15 @@ label.btn{cursor:pointer}
     return `${h}g${m ? pad(m) : ""}`;
   };
   const shiftLabel = s => `${gTime(s.in)}-${gTime(s.out)}`;
+  // Màu ca: ca có trong Cài đặt lấy màu theo thứ tự (1–4…), ca giờ khác lấy màu 5 hoặc 6 cố định theo giờ
+  const sameEnd = (a, b) => a === b || ((a === "23:59" || a === "00:00") && (b === "23:59" || b === "00:00"));
+  function shiftTone(s) {
+    const i = S.settings.shifts.findIndex(sh => sh.in === s.in && sameEnd(sh.out, s.out || ""));
+    if (i >= 0) return (i % 6) + 1;
+    let h = 0;
+    for (const ch of `${s.in}-${s.out}`) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return 5 + (h % 2);
+  }
   // Cho phép xuống dòng sau dấu gạch khi ô lịch hẹp
   const cellHtml = v => esc(v).replace("-", "-<wbr>");
   const sesText = s => `${s.in}–${s.out || "…"}`;
@@ -900,7 +941,7 @@ label.btn{cursor:pointer}
     $("#shiftPick").innerHTML = S.settings.shifts.length
       ? S.settings.shifts.map(sh => {
           const on = hasShift(ss, sh);
-          return `<button type="button" class="shift-btn${on ? " on" : ""}" data-shift="${esc(sh.id)}" aria-pressed="${on}"${dis}>
+          return `<button type="button" class="shift-btn sc-${shiftTone(sh)}${on ? " on" : ""}" data-shift="${esc(sh.id)}" aria-pressed="${on}"${dis}>
             <span class="sn">${esc(sh.name)}</span><span class="st mono">${esc(sh.in)}–${esc(sh.out)}</span>
             <span class="sc">${on ? "✓ Đã chấm · bấm để bỏ" : "Bấm để chấm ca này"}</span></button>`;
         }).join("")
@@ -929,10 +970,10 @@ label.btn{cursor:pointer}
     const keys = monthKeys(y, m), sum = summarize(keys);
     const offParts = Object.entries(sum.off).map(([t, c]) => `${c} ${(OFF_SHORT[t] || "nghỉ").toLowerCase()}`);
     $("#stats").innerHTML = `
-      <div class="stat"><div class="k">Tổng giờ trong tháng</div><div class="v">${fmtDur(sum.work)}</div></div>
-      <div class="stat"><div class="k">Ngày đi làm</div><div class="v">${sum.workDays}</div></div>
-      <div class="stat"><div class="k">Ngày nghỉ</div><div class="v">${sum.offDays}</div><div class="s">${offParts.join(" · ") || "&nbsp;"}</div></div>
-      <div class="stat"><div class="k">Làm thêm</div><div class="v">${fmtDur(sum.ot)}</div></div>`;
+      <div class="stat tone-blue"><div class="k">Tổng giờ trong tháng</div><div class="v">${fmtDur(sum.work)}</div></div>
+      <div class="stat tone-green"><div class="k">Ngày đi làm</div><div class="v">${sum.workDays}</div></div>
+      <div class="stat tone-grey"><div class="k">Ngày nghỉ</div><div class="v">${sum.offDays}</div><div class="s">${offParts.join(" · ") || "&nbsp;"}</div></div>
+      <div class="stat tone-orange"><div class="k">Làm thêm</div><div class="v">${fmtDur(sum.ot)}</div></div>`;
 
     const lead = (new Date(y, m, 1).getDay() + 6) % 7;
     let html = "<div></div>".repeat(lead);
@@ -942,6 +983,7 @@ label.btn{cursor:pointer}
         <span class="dn">${dt.getDate()}</span><span class="dv">${cellHtml(c.val)}</span>${d && d.note ? '<span class="note-mark" title="Có ghi chú"></span>' : ""}</button>`;
     }
     $("#calGrid").innerHTML = html;
+    $("#shiftLegend").innerHTML = S.settings.shifts.map(sh => `<span class="sc-${shiftTone(sh)}"><i></i>${esc(sh.name)} ${esc(shiftLabel(sh))}</span>`).join("");
 
     const rows = keys.filter(k => S.days.has(k)).map(k => {
       const d = S.days.get(k), dt = dateOf(k);
@@ -952,7 +994,7 @@ label.btn{cursor:pointer}
         const t = d.offType || "khac";
         return `<tr><td>${dateCell}</td><td><span class="chip t-${t}">${esc(OFF[t] || "Nghỉ")}</span></td><td class="num">—</td><td class="num">—</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
       }
-      return `<tr><td>${dateCell}</td><td class="ses">${(d.sessions || []).map(sesText).map(esc).join("<br>") || "—"}</td><td class="num">${fmtDur(c.regMin)}</td><td class="num">${c.extraMin >= 1 ? fmtDur(c.extraMin) : "—"}</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
+      return `<tr><td>${dateCell}</td><td class="ses"><span class="ses-chips">${(d.sessions || []).map(x => `<span class="chip sc-${shiftTone(x)}">${esc(shiftLabel(x))}</span>`).join("") || "—"}</span></td><td class="num">${fmtDur(c.regMin)}</td><td class="num">${c.extraMin >= 1 ? fmtDur(c.extraMin) : "—"}</td>${payCell}<td class="note">${esc(d.note)}</td></tr>`;
     });
     $("#tbody").innerHTML = rows.length ? rows.join("")
       : `<tr class="empty-row"><td colspan="6">${S.loaded ? "Tháng này chưa có dữ liệu. Chọn ca ở thẻ hôm nay, hoặc bấm một ngày trên lịch để chấm." : "Đang tải dữ liệu…"}</td></tr>`;
@@ -990,10 +1032,10 @@ label.btn{cursor:pointer}
       $("#goSettings").onclick = () => { showTab("settings"); setTimeout(() => $("#setRate").focus(), 100); };
     }
     $("#payFacts").innerHTML = `
-      <div><dt>Tổng giờ làm</dt><dd>${fmtDur(sum.work)}</dd></div>
-      <div><dt>Ngày đi làm</dt><dd>${sum.workDays}</dd></div>
-      <div><dt>Ngày nghỉ</dt><dd>${sum.offDays}</dd></div>
-      <div><dt>Làm thêm</dt><dd>${fmtDur(sum.ot)}</dd></div>`;
+      <div class="tone-blue"><dt>Tổng giờ làm</dt><dd>${fmtDur(sum.work)}</dd></div>
+      <div class="tone-green"><dt>Ngày đi làm</dt><dd>${sum.workDays}</dd></div>
+      <div class="tone-grey"><dt>Ngày nghỉ</dt><dd>${sum.offDays}</dd></div>
+      <div class="tone-orange"><dt>Làm thêm</dt><dd>${fmtDur(sum.ot)}</dd></div>`;
     let cls = "t-idle", txt = "Tháng sắp tới", live = false;
     const left = Math.round((dateOf(p.payK) - dateOf(tk)) / 86400000);
     const leftTxt = left === 1 ? "ngày mai nhận lương" : `còn ${left} ngày tới ngày lương`;
