@@ -224,7 +224,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .stamps{display:none}
 
 /* ===== Tab Lịch ===== */
-.month-head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.month-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .month-head h2{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-right:auto;white-space:nowrap}
 @media (min-width:640px){.month-head h2{font-size:24px}}
 .month-head .btn,.pay-nav .btn{white-space:nowrap}
@@ -248,9 +248,9 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .mp-foot i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--work);margin-right:5px;vertical-align:1px}
 
 /* thống kê tháng: một khối chia ô bằng đường kẻ */
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;margin-bottom:12px}
 @media (min-width:640px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.stat{padding:14px 16px;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:11px 16px;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .stat:nth-child(2n){border-right:0}
 .stat:nth-child(n+3){border-bottom:0}
 @media (min-width:640px){
@@ -262,11 +262,21 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .stat .v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:800;letter-spacing:-.03em;margin-top:4px;overflow-wrap:anywhere;color:var(--c,var(--ink))}
 .stat .s{font-size:12px;color:var(--muted);margin-top:2px}
 
-.cal{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:10px}
+.cal{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:8px}
 .cal-wd,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .cal-wd div{text-align:center;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);padding-bottom:7px}
 .day{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;min-height:58px;padding:6px;border-radius:9px;border:1px solid transparent;background:var(--cs,var(--surface-2));text-align:left;min-width:0;color:var(--ink)}
-@media (min-width:640px){.day{min-height:72px;padding:8px}}
+/* ô co theo chiều cao cửa sổ để cả 6 hàng của tháng nằm gọn trong một màn hình */
+@media (min-width:640px){.day{min-height:clamp(46px,7.2vh,74px);padding:7px 8px}}
+/* laptop màn thấp: bóp phần đầu tab Lịch lại cho lưới tháng vẫn đủ chỗ */
+@media (min-width:640px) and (max-height:780px){
+  .app{padding-block:16px 48px}
+  .month-head{margin-bottom:10px}
+  .month-head h2{font-size:20px}
+  .stat{padding:8px 14px}
+  .stat .v{font-size:20px}
+  .tabbar{margin-bottom:16px}
+}
 .day .dn{font-size:12.5px;font-weight:700}
 .day .dv{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:800;line-height:1.2;letter-spacing:-.02em;color:var(--c,var(--muted));max-width:100%;overflow-wrap:anywhere}
 @media (min-width:640px){.day .dv{font-size:12px}}
